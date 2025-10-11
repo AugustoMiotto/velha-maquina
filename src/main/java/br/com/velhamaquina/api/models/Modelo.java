@@ -7,36 +7,40 @@ import jakarta.persistence.*;
 public class Modelo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_modelo;
-    private String nome_modelo;
+
+    @Column(name = "id_modelo")
+    private Integer idModelo;
+
+    @Column(name = "nome_modelo")
+    private String nomeModelo;
     @ManyToOne
     @JoinColumn(name = "id_marca")
-    private Marca id_marca;
+    private Marca marca;
 
     public Modelo (){}
 
-    public Modelo(String nome_modelo, Marca id_marca) {
-        this.nome_modelo = nome_modelo;
-        this.id_marca = id_marca;
+    public Modelo(String nomeModelo, Marca marca) {
+        this.nomeModelo = nomeModelo;
+        this.marca = marca;
     }
 
-    public Integer getId_modelo() {
-        return id_modelo;
+    public Integer getIdModelo() {
+        return idModelo;
     }
 
-    public String getNome_modelo() {
-        return nome_modelo;
+    public String getNomeModelo() {
+        return nomeModelo;
     }
 
-    public void setNome_modelo(String nome_modelo) {
-        this.nome_modelo = nome_modelo;
+    public void setNome_modelo(String nomeModelo) {
+        this.nomeModelo = nomeModelo;
     }
 
-    public Marca getId_marca() {
-        return id_marca;
+    public Marca getmarca() {
+        return marca;
     }
 
-    public void setId_marca(Marca id_marca) {
-        this.id_marca = id_marca;
+    public void setId_marca(Marca marca) {
+        this.marca = marca;
     }
 }
