@@ -1,0 +1,85 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f5f1e6;
+  color: #2c2c2c;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+header {
+  text-align: center;
+  background-color: #b22222;
+  color: #fff;
+  padding: 2rem 1rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+main {
+  flex: 1;
+  padding: 2rem;
+}
+
+.carros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.carro-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease;
+}
+
+.carro-card:hover {
+  transform: scale(1.03);
+}
+
+.carro-card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.carro-info {
+  padding: 1rem;
+}
+
+.carro-info h2 {
+  color: #b22222;
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.carro-info p {
+  margin: 0.3rem 0;
+  font-size: 0.95rem;
+}
+
+.carro-preco {
+  color: #228b22;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+footer {
+  text-align: center;
+  background: #b22222;
+  color: #fff;
+  padding: 1rem;
+  font-size: 0.9rem;
+}
