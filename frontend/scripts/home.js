@@ -19,13 +19,6 @@ function getImagemPrincipal(veiculo) {
  * Pega o texto alternativo da imagem principal.
  * Se não houver, usa o nome do modelo.
  */
-function getAltTexto(veiculo) {
-    if (veiculo.imagens && veiculo.imagens.length > 0 && veiculo.imagens[0].altTexto) {
-        return veiculo.imagens[0].altTexto;
-    }
-    // CORRIGIDO: Usar nomeModelo aqui também
-    return veiculo.modelo?.nomeModelo || 'Veículo antigo'; 
-}
 
 /**
  * Função principal para carregar os veículos
@@ -57,7 +50,7 @@ async function carregarVeiculos() {
             
             // Verificações de nome de variável corrigidas
             card.innerHTML = `
-                <img src="${getImagemPrincipal(v)}" alt="${getAltTexto(v)}">
+                <img src="${getImagemPrincipal(v)}" alt="Imagem do ${v.modelo?.nomeModelo || 'veículo'}" class="carro-imagem"/>
                 <div class="carro-info">
                     <h2>${v.modelo?.nomeModelo || 'Modelo desconhecido'}</h2>
                     <p><strong>Categoria:</strong> ${v.categoria?.nome_categoria || 'Sem categoria'}</p>
