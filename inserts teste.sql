@@ -14,18 +14,25 @@ INSERT INTO proprietario (nome_proprietario, email, telefone, cidade, estado, la
 
 
 -- Inserindo Veículos, usando os IDs de tudo que criamos
-INSERT INTO veiculo (id_proprietario, id_modelo, id_categoria, ano_fabricacao, ano_modelo, preco, quilometragem, cor, descricao, placa, status) VALUES
+INSERT INTO veiculo (id_proprietario, id_modelo, id_categoria, nome_veiculo, ano_fabricacao, ano_modelo, preco, quilometragem, cor, descricao, placa, status) VALUES
 (
     1, -- Dono: João da Silva (ID 1)
     1, -- Modelo: Mustang (ID 1)
     3, -- Categoria: Antigo Novo (ID 3)
+    'Mustang 1967',
     1967, 1967, 350000.00, 55000, 'Vermelho', 'Ford Mustang Fastback, motor V8. Ícone americano.', 'ABC1D23', 'Disponível'
 );
 
-INSERT INTO veiculo (id_proprietario, id_modelo, id_categoria, ano_fabricacao, ano_modelo, preco, quilometragem, cor, descricao, placa, status) VALUES
+INSERT INTO veiculo (id_proprietario, id_modelo, id_categoria, nome_veiculo, ano_fabricacao, ano_modelo, preco, quilometragem, cor, descricao, placa, status) VALUES
 (
     2, -- Dono: Velha Máquina - Estoque (ID 2)
     2, -- Modelo: Opala (ID 2)
     2, -- Categoria: Antigo (ID 2)
+    'Opala 1979',
     1979, 1979, 85000.00, 98000, 'Prata', 'Chevrolet Opala Comodoro, 6 cilindros. Um clássico nacional.', 'DEF4E56', 'Disponível'
 );
+
+INSERT INTO imagem_veiculo 
+    (id_veiculo, url_imagem, alt_texto, ordem) 
+VALUES 
+    (1, 'http://localhost/uploads_imagens/opala.jpg', 'Foto de um Opala', 0);

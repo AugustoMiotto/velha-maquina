@@ -4,6 +4,8 @@ package br.com.velhamaquina.api.models;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.List;
+
 
 @Entity
 @Table(name = "veiculo")
@@ -12,15 +14,15 @@ public class Veiculo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_veiculo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // <-- MUDE AQUI
     @JoinColumn(name = "id_modelo")
     private Modelo modelo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // <-- MUDE AQUI
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER) // <-- MUDE AQUI
     @JoinColumn(name = "id_proprietario")
     private Proprietario proprietario;
 
@@ -41,6 +43,14 @@ public class Veiculo {
     private Date dataCadastro;
 
     private String status;
+
+    @OneToMany(
+            mappedBy = "veiculo", // "veiculo" é o nome do campo na classe ImagemVeiculo
+            cascade = CascadeType.ALL, // Se deletar um Veiculo, deleta suas imagens
+            fetch = FetchType.EAGER
+    )
+    @OrderBy("ordem ASC") // Sempre trará a lista ordenada (imagem 0, 1, 2...)
+    private List<ImagemVeiculo> imagens;
 
     public Veiculo() {
     }
@@ -157,4 +167,13 @@ public class Veiculo {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public List<ImagemVeiculo> getImagens() {
+        return imagens;
+    }
+
+    public void setImagens(List<ImagemVeiculo> imagens) {
+        this.imagens = imagens;
+    }
+
 }

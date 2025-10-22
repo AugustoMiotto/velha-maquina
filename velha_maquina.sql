@@ -4,7 +4,7 @@ USE velha_maquina;
 -- Tabela de Proprietários 
 CREATE TABLE proprietario (
     id_proprietario INT AUTO_INCREMENT PRIMARY KEY,
-    nome_propietario VARCHAR(100) NOT NULL,
+    nome_proprietario VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL,
     telefone VARCHAR(20) NOT NULL,
     cidade VARCHAR(100),
@@ -52,6 +52,18 @@ CREATE TABLE veiculo (
     FOREIGN KEY (id_proprietario) REFERENCES proprietario(id_proprietario),
     FOREIGN KEY (id_modelo) REFERENCES modelo(id_modelo),
     FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
+) ENGINE=InnoDB;
+
+-- Tabela de Imagens dos Veículos (A nova tabela)
+CREATE TABLE imagem_veiculo (
+    id_imagem INT AUTO_INCREMENT PRIMARY KEY,
+    id_veiculo INT NOT NULL,
+    url_imagem VARCHAR(512) NOT NULL,
+    ordem INT DEFAULT 0,    -- Para ordenar a galeria (0 = principal, 1, 2, 3...)
+
+    -- Chave estrangeira ligando a imagem ao veículo
+    FOREIGN KEY (id_veiculo) REFERENCES veiculo(id_veiculo)
+        ON DELETE CASCADE -- Se um veículo for deletado, suas imagens também serão.
 ) ENGINE=InnoDB;
 
 
