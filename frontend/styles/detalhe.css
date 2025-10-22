@@ -1,0 +1,97 @@
+/* /frontend/styles/detalhe.css */
+
+/* --- Container Principal --- */
+#detalhe-container {
+    max-width: 900px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.detalhe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+
+.detalhe-header h2 {
+    font-size: 2.5rem;
+    color: #b33939; /* Vermelho escuro */
+    margin: 0;
+}
+
+.detalhe-preco {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #27ae60; /* Verde */
+    margin: 0;
+}
+
+/* --- Galeria de Imagens --- */
+.detalhe-galeria {
+    margin-bottom: 30px;
+}
+
+.imagem-principal {
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Garante que a imagem não vaze */
+}
+
+.imagem-principal img {
+    width: 100%; /* Faz a imagem principal ocupar o container */
+    height: auto;
+    display: block;
+}
+
+.galeria-miniaturas {
+    display: flex;
+    flex-wrap: wrap; /* Permite que as imagens quebrem a linha */
+    gap: 10px; /* Espaço entre as miniaturas */
+}
+
+.miniatura {
+    width: 120px; /* Tamanho fixo para as miniaturas */
+    height: 80px;
+    object-fit: cover; /* Garante que a imagem preencha o espaço */
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 0.2s ease;
+}
+
+.miniatura:hover,
+.miniatura.ativa {
+    opacity: 1.0;
+    border-color: #b33939;
+}
+
+/* --- Ficha Técnica e Vendedor --- */
+.detalhe-info {
+    line-height: 1.7;
+}
+
+.detalhe-info h3 {
+    font-size: 1.5rem;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    margin-top: 25px;
+}
+
+.detalhe-info ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.detalhe-info li {
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
