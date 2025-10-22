@@ -15,14 +15,6 @@ function getImagemPrincipal(veiculo) {
     return "https://via.placeholder.com/300x200?text=Sem+Foto"; 
 }
 
-/**
- * Pega o texto alternativo da imagem principal.
- * Se não houver, usa o nome do modelo.
- */
-
-/**
- * Função principal para carregar os veículos
- */
 async function carregarVeiculos() {
     const container = document.getElementById("carros-container");
 
