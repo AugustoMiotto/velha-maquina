@@ -72,6 +72,10 @@ public class Veiculo {
         this.status = status;
     }
 
+    public Integer getId_veiculo() {
+        return id_veiculo;
+    }
+
     public Modelo getModelo() {
         return modelo;
     }
