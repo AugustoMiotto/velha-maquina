@@ -1,6 +1,6 @@
 // /velha-maquina/frontend/scripts/home.js
 
-const API_URL = "http://localhost:8080/veiculos";
+const API_URL = "http://26.122.130.40:8080/veiculos";
 
 /**
  * Pega a URL da imagem principal do veículo.

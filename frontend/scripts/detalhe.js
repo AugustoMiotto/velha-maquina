@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         // 2. Chamar o NOVO endpoint da API
-        const API_URL = `http://localhost:8080/veiculos/${veiculoId}`;
+        const API_URL = `http://26.122.130.40:8080/veiculos/${veiculoId}`;
         const resposta = await fetch(API_URL);
 
         if (!resposta.ok) {
