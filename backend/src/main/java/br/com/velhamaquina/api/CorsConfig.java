@@ -19,7 +19,8 @@ public class CorsConfig {
                         .allowedOrigins("http://127.0.0.1:5500",
                                 "http://localhost:5500",
                                 "http://127.0.0.1",
-                                "http://localhost")
+                                "http://localhost",
+                                "http://26.122.130.40")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
