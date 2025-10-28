@@ -1,6 +1,6 @@
 // /velha-maquina/frontend/scripts/home.js
 
-const API_URL = "http://localhost:8080/veiculos";
+const API_URL = "http://26.122.130.40:8080/veiculos";
 
 /**
  * Pega a URL da imagem principal do veículo.
@@ -36,24 +36,34 @@ async function carregarVeiculos() {
         container.innerHTML = ""; 
 
         // Gera o HTML para cada veículo
-        veiculos.forEach(v => {
+       veiculos.forEach(v => {
+            // Criamos o <a> (link) primeiro
+            const link = document.createElement('a');
+            // O link aponta para a nova página e passa o ID na URL
+            link.href = `veiculo-detalhe.html?id=${v.id_veiculo}`; 
+            link.className = 'carro-card-link'; // Classe para estilização (opcional)
+
+            // Criamos o card (como você já fazia)
             const card = document.createElement('div');
             card.className = 'carro-card';
             
-            // Verificações de nome de variável corrigidas
+            // O HTML de antes (agora com a imagem certa)
             card.innerHTML = `
-                <img src="${getImagemPrincipal(v)}" alt="Imagem do ${v.modelo?.nomeModelo || 'veículo'}" class="carro-imagem"/>
+                <img src="${getImagemPrincipal(v)}" 
+                     alt="Imagem do ${v.modelo?.nomeModelo || 'veículo'}" 
+                     class="carro-imagem"/>
                 <div class="carro-info">
                     <h2>${v.modelo?.nomeModelo || 'Modelo desconhecido'}</h2>
                     <p><strong>Categoria:</strong> ${v.categoria?.nome_categoria || 'Sem categoria'}</p>
                     <p><strong>Ano de fabricação:</strong> ${v.anoFabricacao}</p>
-                    <p><strong>Ano do modelo:</strong> ${v.anoModelo || '—'}</p>
-                    <p><strong>Cor:</strong> ${v.cor || 'Não informada'}</p>
-                    <p><strong>Descrição:</strong> ${v.descricao || 'Sem descrição disponível'}</p>
                     <p class="carro-preco">R$ ${v.preco?.toLocaleString('pt-BR', { minimumFractionDigits: 2 }) || 'Sob consulta'}</p>
                 </div>
             `;
-            container.appendChild(card);
+            
+            // Colocamos o card DENTRO do link
+            link.appendChild(card);
+            // Adicionamos o link (com o card dentro) ao container
+            container.appendChild(link);
         });
 
     } catch (erro) {
