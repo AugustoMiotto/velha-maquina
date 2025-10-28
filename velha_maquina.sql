@@ -54,7 +54,7 @@ CREATE TABLE veiculo (
     FOREIGN KEY (id_categoria) REFERENCES categoria(id_categoria)
 ) ENGINE=InnoDB;
 
--- Tabela de Imagens dos Veículos (A nova tabela)
+-- Tabela de Imagens dos Veículos 
 CREATE TABLE imagem_veiculo (
     id_imagem INT AUTO_INCREMENT PRIMARY KEY,
     id_veiculo INT NOT NULL,
@@ -71,3 +71,4 @@ CREATE TABLE imagem_veiculo (
 INSERT INTO categoria (nome_categoria) VALUES ('Antigo Velho');
 INSERT INTO categoria (nome_categoria) VALUES ('Antigo');
 INSERT INTO categoria (nome_categoria) VALUES ('Antigo Novo');
+
