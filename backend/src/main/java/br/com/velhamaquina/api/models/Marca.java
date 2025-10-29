@@ -8,13 +8,15 @@ public class Marca {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id_marca;
-    private String nome_marca;
+
+    @Column(name = "nome_marca")
+    private String nomeMarca;
 
     public Marca() {
     }
 
     public Marca(String nome_marca) {
-        this.nome_marca = nome_marca;
+        this.nomeMarca = nome_marca;
     }
 
     public int getId() {
@@ -22,11 +24,11 @@ public class Marca {
     }
 
 
-    public String getNome_marca() {
-        return nome_marca;
+    public String getNomeMarca() {
+        return nomeMarca;
     }
 
-    public void setNome_marca(String nome_marca) {
-        this.nome_marca = nome_marca;
+    public void setNomeMarca(String nome_marca) {
+        this.nomeMarca = nome_marca;
     }
 }

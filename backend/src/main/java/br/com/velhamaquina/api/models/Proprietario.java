@@ -11,7 +11,7 @@ public class Proprietario {
     @Column(name = "id_proprietario")
     private Integer idProprietario;
 
-    @Column(name = "nome_propietario")
+    @Column(name = "nome_proprietario")
     private String nomeProprietario;
 
     private String email;

@@ -1,8 +1,10 @@
 package br.com.velhamaquina.api.controllers;
 
 import br.com.velhamaquina.api.models.ImagemVeiculo;
+import br.com.velhamaquina.api.models.Marca;
 import br.com.velhamaquina.api.models.Veiculo;
 import br.com.velhamaquina.api.repositories.VeiculoRepository;
+import br.com.velhamaquina.api.repositories.MarcaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +22,7 @@ import java.util.UUID;
 public class VeiculoController {
     private final VeiculoRepository  veiculoRepository;
     private final ObjectMapper objectMapper;
+    private final MarcaRepository marcaRepository;
 
     @Value("${upload.diretorio.imagens}")
     private String caminhoUpload;
@@ -25,9 +30,10 @@ public class VeiculoController {
     @Value("${upload.url-base}")
     private String urlBase;
 
-    public VeiculoController(VeiculoRepository veiculoRepository, ObjectMapper objectMapper) {
+    public VeiculoController(VeiculoRepository veiculoRepository, ObjectMapper objectMapper, MarcaRepository marcaRepository) {
         this.veiculoRepository = veiculoRepository;
         this.objectMapper = objectMapper;
+        this.marcaRepository = marcaRepository;
     }
 
     @GetMapping
@@ -52,6 +58,8 @@ public class VeiculoController {
         try {
             // 1. Converter o JSON em objeto Veiculo
             Veiculo veiculo = objectMapper.readValue(veiculoJson, Veiculo.class);
+
+            veiculo.setImagens(new ArrayList<>());
 
             for (int i = 0; i < imagens.size() ; i++) {
                 MultipartFile arquivo = imagens.get(i);
@@ -78,10 +86,25 @@ public class VeiculoController {
                 // Adicionar a nova imagem à lista do veículo
                 veiculo.getImagens().add(imagem);
             }
+            // Pega a marca "nova" que veio do JSON
+            Marca marcaDoJson = veiculo.getModelo().getMarca();
 
-            // 4. Salvar o Veículo no banco
-            // Graças ao CascadeType.ALL, isso salvará o Veiculo,
-            // o novo Proprietario E a nova List<ImagemVeiculo> de uma só vez.
+            // Procura no banco se ela já existe
+            Optional<Marca> marcaExistente = marcaRepository.findByNomeMarca(marcaDoJson.getNomeMarca());
+
+            Marca marcaParaSalvar;
+            if (marcaExistente.isPresent()) {
+                // Se SIM: usamos a que já existe (com ID)
+                marcaParaSalvar = marcaExistente.get();
+            } else {
+                // Se NÃO: é uma marca nova, então salvamos ela
+                marcaParaSalvar = marcaRepository.save(marcaDoJson);
+            }
+
+            // Atualiza o Modelo com a Marca correta (agora gerenciada pelo JPA)
+            veiculo.getModelo().setMarca(marcaParaSalvar);
+
+            // Salvar o Veículo no banco
             Veiculo veiculoSalvo = veiculoRepository.save(veiculo);
 
             return ResponseEntity.status(201).body(veiculoSalvo); // 201 Created
