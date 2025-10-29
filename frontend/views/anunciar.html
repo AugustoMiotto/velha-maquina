@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Velha Máquina - Anuncie seu Veículo</title>
+    <link rel="stylesheet" href="../styles/home.css" />
+    <link rel="stylesheet" href="../styles/anunciar.css" /> </head>
+<body>
+    <header>
+        <h1>🚗 Velha Máquina</h1>
+        <a href="home.html" class="voltar-link">&larr; Voltar para a lista</a>
+    </header>
+
+    <main>
+        <form id="form-anuncio" class="anuncio-form">
+            <h2>Anuncie Seu Clássico</h2>
+            
+            <fieldset>
+                <legend>Seus Dados (Proprietário)</legend>
+                <div class="form-group">
+                    <label for="prop-nome">Nome Completo:</label>
+                    <input type="text" id="prop-nome" name="nome_proprietario" required>
+                </div>
+                <div class="form-group">
+                    <label for="prop-email">Email:</label>
+                    <input type="email" id="prop-email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="prop-telefone">Telefone (com DDD):</label>
+                    <input type="tel" id="prop-telefone" name="prop-telefone" required>
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Dados do Veículo</legend>
+                
+                <div class="form-group">
+                    <label for="categoria">Categoria:</label>
+                    <select id="categoria" name="categoria" required>
+                        <option value="">Carregando categorias...</option>
+                        </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="marca-nome">Marca:</label>
+                    <input type="text" id="marca-nome" name="marca-nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="modelo-nome">Modelo:</label>
+                    <input type="text" id="modelo-nome" name="modelo-nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="ano-fabricacao">Ano Fabricação:</label>
+                    <input type="number" id="ano-fabricacao" name="ano-fabricacao" required>
+                </div>
+                <div class="form-group">
+                    <label for="ano-modelo">Ano Modelo:</label>
+                    <input type="number" id="ano-modelo" name="ano-modelo" required>
+                </div>
+                <div class="form-group">
+                    <label for="quilometragem">Quilometragem (km):</label>
+                    <input type="number" id="quilometragem" name="quilometragem" required>
+                <div class="form-group">
+                    <label for="cor">Cor:</label>
+                    <input type="text" id="cor" name="cor" required>
+                </div>
+                <div class="form-group">
+                    <label for="preco">Preço (R$):</label>
+                    <input type="number" id="preco" name="preco" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="placa">Placa:</label>
+                    <input type="text" id="placa" name="placa">
+                </div>
+                <div class="form-group">
+                    <label for="descricao">Descrição:</label>
+                    <textarea id="descricao" name="descricao" rows="4"></textarea>
+                </div>
+            </fieldset>
+            
+            <fieldset>
+                <legend>Imagens do Veículo</legend>
+                <div class="form-group">
+                    <label for="imagens">Selecione as imagens (até 5):</label>
+                    <input type="file" id="imagens" name="imagens" multiple accept="image/jpeg, image/png">
+                </div>
+            </fieldset>
+            
+            <button type="submit" id="btn-enviar">Enviar Anúncio</button>
+            <div id="status-envio" class="status-mensagem"></div>
+        </form>
+    </main>
+
+    <script src="../scripts/anunciar.js"></script>
+</body>
+</html>

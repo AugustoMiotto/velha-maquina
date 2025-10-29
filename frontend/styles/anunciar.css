@@ -1,0 +1,83 @@
+/* /frontend/styles/anunciar.css */
+
+.anuncio-form {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.anuncio-form h2 {
+    text-align: center;
+    color: #b33939;
+    margin-bottom: 25px;
+}
+
+.anuncio-form fieldset {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.anuncio-form legend {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    padding: 0 10px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="tel"],
+.form-group input[type="number"],
+.form-group input[type="file"],
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Garante que o padding não quebre o layout */
+}
+
+.anuncio-form button[type="submit"] {
+    width: 100%;
+    padding: 12px;
+    background-color: #27ae60;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.anuncio-form button[type="submit"]:hover {
+    background-color: #229954;
+}
+
+.anuncio-form button[type="submit"]:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+}
+
+.status-mensagem {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 1.1rem;
+    font-weight: bold;
+}
