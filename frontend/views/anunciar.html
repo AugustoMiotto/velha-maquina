@@ -1,97 +1,135 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Velha Máquina - Anuncie seu Veículo</title>
-    <link rel="stylesheet" href="../styles/home.css" />
-    <link rel="stylesheet" href="../styles/anunciar.css" /> </head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velha Máquina - Anunciar Veículo</title>
+  <link rel="stylesheet" href="../styles/anunciar.css">
+
+  <!-- Fonte vintage -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
 <body>
-    <header>
-        <h1>🚗 Velha Máquina</h1>
-        <a href="home.html" class="voltar-link">&larr; Voltar para a lista</a>
-    </header>
+  <header class="topo">
+    <h1>🚗 Velha Máquina</h1>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="encontrar.html">Encontrar</a>
+      <a href="anunciar.html" class="ativo">Anunciar</a>
+    </nav>
+  </header>
 
-    <main>
-        <form id="form-anuncio" class="anuncio-form">
-            <h2>Anuncie Seu Clássico</h2>
-            
-            <fieldset>
-                <legend>Seus Dados (Proprietário)</legend>
-                <div class="form-group">
-                    <label for="prop-nome">Nome Completo:</label>
-                    <input type="text" id="prop-nome" name="nome_proprietario" required>
-                </div>
-                <div class="form-group">
-                    <label for="prop-email">Email:</label>
-                    <input type="email" id="prop-email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="prop-telefone">Telefone (com DDD):</label>
-                    <input type="tel" id="prop-telefone" name="prop-telefone" required>
-                </div>
-            </fieldset>
+  <main class="container">
+    <h2>Anuncie seu carro clássico</h2>
 
-            <fieldset>
-                <legend>Dados do Veículo</legend>
-                
-                <div class="form-group">
-                    <label for="categoria">Categoria:</label>
-                    <select id="categoria" name="categoria" required>
-                        <option value="">Carregando categorias...</option>
-                        </select>
-                </div>
+    <form id="form-anuncio" enctype="multipart/form-data" class="form-anuncio">
+      <div class="grupo">
+        <label for="categoria">Categoria</label>
+        <select id="categoria" required>
+          <option value="">Carregando...</option>
+        </select>
+      </div>
 
-                <div class="form-group">
-                    <label for="marca-nome">Marca:</label>
-                    <input type="text" id="marca-nome" name="marca-nome" required>
-                </div>
-                <div class="form-group">
-                    <label for="modelo-nome">Modelo:</label>
-                    <input type="text" id="modelo-nome" name="modelo-nome" required>
-                </div>
-                <div class="form-group">
-                    <label for="ano-fabricacao">Ano Fabricação:</label>
-                    <input type="number" id="ano-fabricacao" name="ano-fabricacao" required>
-                </div>
-                <div class="form-group">
-                    <label for="ano-modelo">Ano Modelo:</label>
-                    <input type="number" id="ano-modelo" name="ano-modelo" required>
-                </div>
-                <div class="form-group">
-                    <label for="quilometragem">Quilometragem (km):</label>
-                    <input type="number" id="quilometragem" name="quilometragem" required>
-                <div class="form-group">
-                    <label for="cor">Cor:</label>
-                    <input type="text" id="cor" name="cor" required>
-                </div>
-                <div class="form-group">
-                    <label for="preco">Preço (R$):</label>
-                    <input type="number" id="preco" name="preco" step="0.01" required>
-                </div>
-                <div class="form-group">
-                    <label for="placa">Placa:</label>
-                    <input type="text" id="placa" name="placa">
-                </div>
-                <div class="form-group">
-                    <label for="descricao">Descrição:</label>
-                    <textarea id="descricao" name="descricao" rows="4"></textarea>
-                </div>
-            </fieldset>
-            
-            <fieldset>
-                <legend>Imagens do Veículo</legend>
-                <div class="form-group">
-                    <label for="imagens">Selecione as imagens (até 5):</label>
-                    <input type="file" id="imagens" name="imagens" multiple accept="image/jpeg, image/png">
-                </div>
-            </fieldset>
-            
-            <button type="submit" id="btn-enviar">Enviar Anúncio</button>
-            <div id="status-envio" class="status-mensagem"></div>
-        </form>
-    </main>
+      <div class="grupo">
+        <label for="modelo-nome">Modelo</label>
+        <input type="text" id="modelo-nome" placeholder="Ex: Fusca 1972" required>
+      </div>
 
-    <script src="../scripts/anunciar.js"></script>
+      <div class="grupo">
+        <label for="marca-nome">Marca</label>
+        <input type="text" id="marca-nome" placeholder="Ex: Volkswagen" required>
+      </div>
+
+      <div class="grupo-duplo">
+        <div>
+          <label for="ano-fabricacao">Ano de Fabricação</label>
+          <input type="number" id="ano-fabricacao" required>
+        </div>
+        <div>
+          <label for="ano-modelo">Ano do Modelo</label>
+          <input type="number" id="ano-modelo" required>
+        </div>
+      </div>
+
+      <div class="grupo-duplo">
+        <div>
+          <label for="preco">Preço (R$)</label>
+          <input type="number" id="preco" required>
+        </div>
+        <div>
+          <label for="quilometragem">Quilometragem</label>
+          <input type="number" id="quilometragem" required>
+        </div>
+      </div>
+
+      <div class="grupo-duplo">
+        <div>
+          <label for="cor">Cor</label>
+          <input type="text" id="cor" required>
+        </div>
+        <div>
+          <label for="placa">Placa</label>
+          <input type="text" id="placa" required>
+        </div>
+      </div>
+
+      <div class="grupo">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" rows="4" placeholder="Fale mais sobre o veículo"></textarea>
+      </div>
+
+      <div class="grupo">
+        <label for="prop-nome">Nome do Proprietário</label>
+        <input type="text" id="prop-nome" required>
+      </div>
+
+      <div class="grupo-duplo">
+        <div>
+          <label for="prop-email">Email</label>
+          <input type="email" id="prop-email" required>
+        </div>
+        <div>
+          <label for="prop-telefone">Telefone</label>
+          <input type="tel" id="prop-telefone" required>
+        </div>
+      </div>
+
+  <label for="endereco">Endereço:</label>
+  <input
+    type="text"
+    id="endereco"
+    placeholder="Rua, número, cidade..."
+    required
+  />
+  <ul id="sugestoes-endereco" class="sugestoes-list"></ul>
+
+  <input type="hidden" id="latitude" name="latitude" />
+  <input type="hidden" id="longitude" name="longitude" />
+  <input type="hidden" id="cidade" name="cidade" />
+  <input type="hidden" id="estado" name="estado" />
+</div>
+
+
+      <div id="mapa" class="mapa"></div>
+
+      <div class="grupo">
+        <label for="imagens">Imagens do veículo</label>
+        <input type="file" id="imagens" accept="image/*" multiple required>
+      </div>
+
+      <button type="submit" id="btn-enviar" class="btn-vintage">Enviar Anúncio</button>
+      <p id="status-envio"></p>
+    </form>
+  </main>
+
+  <footer>
+    <p>© 2025 Velha Máquina — Todos os direitos reservados</p>
+  </footer>
+
+  <script src="../scripts/anunciar.js"></script>
 </body>
 </html>

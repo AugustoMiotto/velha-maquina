@@ -1,83 +1,107 @@
-/* /frontend/styles/anunciar.css */
-
-.anuncio-form {
-    max-width: 700px;
-    margin: 20px auto;
-    padding: 25px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+body {
+  background-color: #f5f0e6;
+  color: #3e2a1b;
+  font-family: 'Playfair Display', serif;
+  margin: 0;
+  padding: 0;
 }
 
-.anuncio-form h2 {
-    text-align: center;
-    color: #b33939;
-    margin-bottom: 25px;
+.topo {
+  background-color: #6b4b2b;
+  color: #fff8e7;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.anuncio-form fieldset {
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 20px;
-    margin-bottom: 20px;
+.topo nav a {
+  color: #fff8e7;
+  margin-left: 15px;
+  text-decoration: none;
+  font-weight: bold;
 }
 
-.anuncio-form legend {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #333;
-    padding: 0 10px;
+.topo nav a.ativo {
+  text-decoration: underline;
 }
 
-.form-group {
-    margin-bottom: 15px;
+.container {
+  max-width: 900px;
+  margin: 30px auto;
+  background: #fff8e7;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: 600;
+h2 {
+  color: #6b4b2b;
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.form-group input[type="text"],
-.form-group input[type="email"],
-.form-group input[type="tel"],
-.form-group input[type="number"],
-.form-group input[type="file"],
-.form-group select,
-.form-group textarea {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box; /* Garante que o padding não quebre o layout */
+.form-anuncio .grupo {
+  margin-bottom: 15px;
 }
 
-.anuncio-form button[type="submit"] {
-    width: 100%;
-    padding: 12px;
-    background-color: #27ae60;
-    color: white;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+.form-anuncio label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
 }
 
-.anuncio-form button[type="submit"]:hover {
-    background-color: #229954;
+.form-anuncio input,
+.form-anuncio select,
+.form-anuncio textarea {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #c8b49b;
+  border-radius: 8px;
+  font-family: inherit;
+  background-color: #fff;
 }
 
-.anuncio-form button[type="submit"]:disabled {
-    background-color: #95a5a6;
-    cursor: not-allowed;
+.grupo-duplo {
+  display: flex;
+  gap: 15px;
 }
 
-.status-mensagem {
-    text-align: center;
-    margin-top: 15px;
-    font-size: 1.1rem;
-    font-weight: bold;
+.mapa {
+  height: 300px;
+  border-radius: 12px;
+  border: 2px solid #6b4b2b;
+  margin-top: 15px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.btn-vintage {
+  background-color: #6b4b2b;
+  color: #fff8e7;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-weight: bold;
+  display: block;
+  margin: 0 auto;
+}
+
+.btn-vintage:hover {
+  background-color: #8c5c33;
+}
+
+#status-envio {
+  text-align: center;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background-color: #6b4b2b;
+  color: #fff8e7;
+  margin-top: 30px;
 }
