@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Encontrar Veículos | Velha Máquina</title>
+
+  <link rel="stylesheet" href="/velha-maquina/frontend/styles/encontrar.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <header class="header">
+    <div class="logo">
+      <h1>🚗 Velha Máquina</h1>
+      <p>Clássicos que contam histórias</p>
+    </div>
+    <nav class="navbar">
+      <a href="index.html">Início</a>
+      <a href="anunciar.html">Anunciar</a>
+      <a href="encontrar.html" class="active">Encontrar</a>
+    </nav>
+  </header>
+
+  <main class="encontrar-container">
+    <section class="filtros">
+      <input type="text" id="busca" placeholder="Buscar por modelo, cidade ou categoria..." />
+      <button id="btn-filtrar">🔍 Buscar</button>
+    </section>
+
+    <section class="conteudo">
+      <div id="mapa"></div>
+      <div class="lista-veiculos" id="lista-veiculos">
+        <p>Carregando anúncios...</p>
+      </div>
+    </section>
+  </main>
+
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="/velha-maquina/frontend/scripts/encontrar.js"></script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+* * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background-color: #f5f1e6;
+  color: #2c2c2c;
+}
+
+/* ===== HEADER ===== */
+.header {
+  background-color: #4B2E05; /* marrom escuro */
+  color: #f5f1e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 3rem;
+  flex-wrap: wrap;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.logo h1 {
+  font-size: 2rem;
+  margin-bottom: 0.2rem;
+  color: #D4AF37; /* dourado */
+}
+
+.logo p {
+  font-size: 0.9rem;
+  color: #f9e79f;
+}
+
+.navbar a {
+  color: #f5f1e6;
+  text-decoration: none;
+  margin: 0 1rem;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navbar a:hover,
+.navbar a.active {
+  color: #D4AF37; /* destaque dourado */
+}
+
+/* ===== BANNER ===== */
+.banner {
+  background: url("/velha-maquina/frontend/assets/imgs/banner-classico.jpg") center/cover no-repeat;
+  color: #fff;
+  height: 75vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.banner::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+}
+
+.banner-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  color: #D4AF37;
+  text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+}
+
+.banner-content p {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  color: #f9f9f9;
+}
+
+.btn-destaque {
+  background: #D4AF37;
+  color: #4B2E05;
+  padding: 0.9rem 1.8rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-destaque:hover {
+  background: #8B5A00;
+  color: #fff;
+}
+
+/* ===== DESTAQUES ===== */
+.destaques {
+  padding: 4rem 2rem;
+  text-align: center;
+  background: #fff;
+}
+
+.destaques h2 {
+  color: #4B2E05;
+  margin-bottom: 0.5rem;
+  font-size: 2rem;
+}
+
+.destaques p {
+  color: #7B3F00;
+  font-size: 1rem;
+}
+
+.carros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.carro-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #fffdf8;
+  border: 2px solid #D4AF37;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.carro-card:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.3);
+}
+
+.imagem-container {
+  position: relative;
+}
+
+.imagem-container img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-bottom: 2px solid #D4AF37;
+}
+
+.carro-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(75, 46, 5, 0.8);
+  color: #fff;
+  opacity: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.3s ease;
+}
+
+.carro-card:hover .carro-overlay {
+  opacity: 1;
+}
+
+.carro-overlay p {
+  margin: 0.3rem 0;
+  color: #f9e79f;
+}
+
+.carro-overlay .preco {
+  color: #27ae60;
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+/* ===== SOBRE ===== */
+.sobre {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: #f5f1e6;
+}
+
+.sobre-texto {
+  flex: 1 1 400px;
+  padding: 1rem;
+}
+
+.sobre-texto h2 {
+  color: #4B2E05;
+  margin-bottom: 1rem;
+}
+
+.sobre-texto p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+  color: #3b2c1e;
+}
+
+.btn {
+  display: inline-block;
+  background: #4B2E05;
+  color: #fff;
+  padding: 0.8rem 1.6rem;
+  border-radius: 6px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background: #8B5A00;
+  color: #f9e79f;
+}
+
+.sobre-imagem {
+  flex: 1 1 400px;
+  text-align: center;
+}
+
+.sobre-imagem img {
+  width: 90%;
+  border-radius: 12px;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+  border: 3px solid #D4AF37;
+}
+
+/* ===== CONTATO ===== */
+.contato {
+  background: #fffdf8;
+  text-align: center;
+  padding: 3rem 2rem;
+  border-top: 3px solid #D4AF37;
+}
+
+.contato h2 {
+  color: #4B2E05;
+  margin-bottom: 0.5rem;
+}
+
+.contato-info p {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  color: #3b2c1e;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  background: #4B2E05;
+  color: #f5f1e6;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  border-top: 2px solid #D4AF37;
+}
+/* ===== HERO CAROUSEL ===== */
+.hero-carousel {
+  position: relative;
+  height: 80vh;
+  overflow: hidden;
+}
+
+.slides {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+}
+
+.slide {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 1.5s ease;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 10;
+  color: #fff;
+  text-align: center;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.hero-content h2 {
+  font-size: 2.8rem;
+  color: #D4AF37;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+}
+
+/* ===== NOVOS CARDS ===== */
+.carro-card {
+  background: #fffdf8;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.carro-card:hover {
+  transform: translateY(-5px);
+  border-color: #D4AF37;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.imagem-container img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.carro-card:hover img {
+  transform: scale(1.05);
+}
+
+.carro-info {
+  padding: 1rem;
+  text-align: center;
+}
+
+.carro-info h3 {
+  color: #4B2E05;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 0.3rem;
+}
+
+.carro-info p {
+  color: #7B3F00;
+  font-size: 0.95rem;
+}
+
+.btn-card {
+  display: inline-block;
+  background: #D4AF37;
+  color: #4B2E05;
+  padding: 0.5rem 1rem;
+  margin-top: 0.8rem;
+  border-radius: 6px;
+  font-weight: bold;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.btn-card:hover {
+  background: #8B5A00;
+  color: #fff;
+}
