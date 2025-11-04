@@ -35,29 +35,29 @@ INSERT INTO veiculo (id_proprietario, id_modelo, id_categoria, nome_veiculo, ano
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem, ordem) 
 VALUES 
-    (2, 'http://26.122.130.40/velha_maquina_imgs/opala.jpg', 0);
+    (2, 'http://26.122.130.40/velha_maquina_imgs/opalafrenye.jpg', 0);
 
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem,  ordem) 
 VALUES 
-    (1, 'http://localhost/velha_maquina_imgs/mustangfrente.jpeg',  '0');
+    (1, 'http://26.122.130.40/velha_maquina_imgs/mustangfrente.jpeg',  '0');
 
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem,  ordem) 
 VALUES 
-    (1, 'http://localhost/velha_maquina_imgs/mustanglado.jpeg',  '1');
+    (1, 'http://26.122.130.40/velha_maquina_imgs/mustanglado.jpeg',  '1');
     
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem,  ordem) 
 VALUES 
-    (1, 'http://localhost/velha_maquina_imgs/mustangtras.jpeg',  '2');
+    (1, 'http://26.122.130.40/velha_maquina_imgs/mustangtras.jpeg',  '2');
     
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem,  ordem) 
 VALUES 
-    (1, 'http://localhost/velha_maquina_imgs/mustangmotor.jpeg',  '3');
+    (1, 'http://26.122.130.40/velha_maquina_imgs/mustangmotor.jpeg',  '3');
     
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem,  ordem) 
 VALUES 
-    (1, 'http://localhost/velha_maquina_imgs/mustangcima.jpeg',  '4');
+    (1, 'http://26.122.130.40/velha_maquina_imgs/mustangcima.jpeg',  '4');

@@ -18,11 +18,11 @@ public class Proprietario {
     private String telefone;
     private String cidade;
     private String estado;
-    private int latitude;
-    private int longitude;
+    private Double latitude;
+    private Double longitude;
 
     public Proprietario(String nomeProprietario, String email, String telefone,
-                        String cidade, String estado, int latitude, int longitude) {
+                        String cidade, String estado, Double latitude, Double longitude) {
         this.nomeProprietario = nomeProprietario;
         this.email = email;
         this.telefone = telefone;
@@ -78,19 +78,19 @@ public class Proprietario {
         this.estado = estado;
     }
 
-    public int getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(int latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public int getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 

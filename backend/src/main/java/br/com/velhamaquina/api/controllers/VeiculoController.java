@@ -3,6 +3,8 @@ package br.com.velhamaquina.api.controllers;
 import br.com.velhamaquina.api.models.ImagemVeiculo;
 import br.com.velhamaquina.api.models.Marca;
 import br.com.velhamaquina.api.models.Veiculo;
+import br.com.velhamaquina.api.models.Proprietario;
+import br.com.velhamaquina.api.repositories.ProprietarioRepository;
 import br.com.velhamaquina.api.repositories.VeiculoRepository;
 import br.com.velhamaquina.api.repositories.MarcaRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,6 +25,8 @@ public class VeiculoController {
     private final VeiculoRepository  veiculoRepository;
     private final ObjectMapper objectMapper;
     private final MarcaRepository marcaRepository;
+    private final ProprietarioRepository proprietarioRepository;
+
 
     @Value("${upload.diretorio.imagens}")
     private String caminhoUpload;
@@ -30,10 +34,11 @@ public class VeiculoController {
     @Value("${upload.url-base}")
     private String urlBase;
 
-    public VeiculoController(VeiculoRepository veiculoRepository, ObjectMapper objectMapper, MarcaRepository marcaRepository) {
+    public VeiculoController(VeiculoRepository veiculoRepository, ObjectMapper objectMapper, MarcaRepository marcaRepository, ProprietarioRepository proprietarioRepository) {
         this.veiculoRepository = veiculoRepository;
         this.objectMapper = objectMapper;
         this.marcaRepository = marcaRepository;
+        this.proprietarioRepository = proprietarioRepository;
     }
 
     @GetMapping
@@ -86,6 +91,23 @@ public class VeiculoController {
                 // Adicionar a nova imagem à lista do veículo
                 veiculo.getImagens().add(imagem);
             }
+            Proprietario proprietarioDoJson = veiculo.getProprietario();
+
+            // Procura no banco se um proprietário com este EMAIL já existe
+            Optional<Proprietario> proprietarioExistente = proprietarioRepository.findByEmail(proprietarioDoJson.getEmail());
+
+            Proprietario proprietarioParaSalvar;
+            if (proprietarioExistente.isPresent()) {
+                // Se SIM: usamos o proprietário existente
+                proprietarioParaSalvar = proprietarioExistente.get();
+            } else {
+                // Se NÃO: é um proprietário novo, então salvamos ele
+                proprietarioParaSalvar = proprietarioRepository.save(proprietarioDoJson);
+            }
+
+            // Atualiza o Veículo com o Proprietário correto (novo ou existente)
+            veiculo.setProprietario(proprietarioParaSalvar);
+
             // Pega a marca "nova" que veio do JSON
             Marca marcaDoJson = veiculo.getModelo().getMarca();
 

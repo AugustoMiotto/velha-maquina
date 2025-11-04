@@ -22,7 +22,7 @@ public class Veiculo {
     @JoinColumn(name = "id_categoria")
     private Categoria categoria;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_proprietario")
     private Proprietario proprietario;
 
