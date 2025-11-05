@@ -1,148 +1,79 @@
-body {
-  background: #f5f1e6;
-  color: #2c2c2c;
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
+/* Encontrar – fundo com imagem, grid 50/50, scrollbar marrom (IDs preservados) */
+:root{
+  --overlay:rgba(14,11,8,.6);
+  --bg:#0e0b08; --ink:#efe6c9; --ink-muted:#c9bc94;
+  --sepia:#d7b65e; --sepia-deep:#a8862f;
+  --grid:rgba(255,255,255,.12); --shadow:0 10px 28px rgba(0,0,0,.55);
+  --scroll-track:rgba(80,60,35,.35);
+  --scroll-thumb:#8e5d35;
 }
 
-.header {
-  background-color: #4B2E05;
-  color: #f5f1e6;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.2rem 3rem;
-  flex-wrap: wrap;
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%;}
+body{
+  min-height:100%; color:var(--ink); font-family:'Poppins', sans-serif;
+  background:
+    linear-gradient(0deg, var(--overlay), var(--overlay)),
+    url('/velha-maquina/frontend/assets/fundo.jpeg') center/cover fixed no-repeat;
 }
 
-.logo h1 {
-  font-size: 1.8rem;
-  color: #D4AF37;
+.encontrar-wrap{
+  max-width:1200px; margin:24px auto 60px; padding:0 16px;
+  display:grid; grid-template-rows:auto 1fr; gap:16px;
 }
 
-.navbar a {
-  color: #f5f1e6;
-  text-decoration: none;
-  margin: 0 1rem;
-  font-weight: 500;
+/* Busca */
+.filtros{
+  width:min(520px,100%);
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.2));
+  border:1px solid var(--grid); border-radius:14px; padding:16px; box-shadow:var(--shadow);
+  backdrop-filter: blur(2px);
+}
+.filtros label{display:block;font-weight:700;color:var(--ink-muted);margin-bottom:6px;}
+.filtros-row{display:flex;gap:8px;}
+#busca{
+  flex:1;padding:11px 12px;border-radius:10px;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.28));
+  border:1px solid var(--grid); color:var(--ink); outline:none; font-weight:700; font-style:italic;
+}
+#busca::placeholder{ color:rgba(233,223,197,.7); font-style:italic; font-weight:600; }
+.btn{
+  padding:11px 14px;border-radius:12px;background:linear-gradient(180deg,var(--sepia),var(--sepia-deep));
+  color:#0f0b08;border:1px solid var(--grid);cursor:pointer;font-weight:800;
 }
 
-.navbar a.active,
-.navbar a:hover {
-  color: #D4AF37;
+/* 50/50 */
+.grid50{ display:grid; grid-template-columns:1fr 1fr; gap:16px; align-items:start; }
+@media (max-width:900px){ .grid50{ grid-template-columns:1fr; } }
+
+#mapa{
+  width:100%;height:520px;border-radius:12px;border:1px solid var(--grid);
+  background:#0f0b08; box-shadow:var(--shadow);
 }
 
-/* ===== FILTROS ===== */
-.filtros {
-  text-align: center;
-  padding: 1.5rem;
-  background: #fffdf8;
-  border-bottom: 2px solid #D4AF37;
+.lista-veiculos{
+  display:flex; flex-direction:column; gap:12px; max-height:520px; overflow:auto; padding-right:6px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.2));
+  border:1px solid var(--grid); border-radius:12px; box-shadow:var(--shadow);
+}
+/* Scrollbar marrom */
+.lista-veiculos::-webkit-scrollbar{ width:10px; }
+.lista-veiculos::-webkit-scrollbar-track{ background:var(--scroll-track); border-radius:10px; }
+.lista-veiculos::-webkit-scrollbar-thumb{ background:var(--scroll-thumb); border-radius:10px; }
+.lista-veiculos{ scrollbar-width:thin; scrollbar-color: var(--scroll-thumb) var(--scroll-track); }
+
+.veiculo-card{
+  display:flex; gap:12px; align-items:center; padding:12px; border-radius:12px;
+  background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(0,0,0,.2));
+  border:1px solid var(--grid); margin:8px 8px 0;
+}
+.veiculo-card img{ width:120px; height:80px; object-fit:cover; border-radius:8px; }
+.veiculo-info h3{ font-family:'Playfair Display', serif; margin-bottom:4px; }
+.veiculo-info .meta{ color:var(--ink-muted); font-size:.95rem; }
+.btn-ver{
+  display:inline-block; margin-top:6px; padding:8px 10px; border-radius:10px;
+  background:linear-gradient(180deg,var(--sepia),#8e5d35); color:#0f0b08;
+  text-decoration:none; font-weight:800;
 }
 
-.filtros input {
-  width: 60%;
-  padding: 0.8rem;
-  border-radius: 8px;
-  border: 2px solid #D4AF37;
-  outline: none;
-  font-size: 1rem;
-}
-
-.filtros button {
-  background: #D4AF37;
-  border: none;
-  color: #4B2E05;
-  padding: 0.8rem 1.4rem;
-  border-radius: 6px;
-  margin-left: 0.6rem;
-  cursor: pointer;
-  font-weight: bold;
-  transition: all 0.3s;
-}
-
-.filtros button:hover {
-  background: #8B5A00;
-  color: #fff;
-}
-
-/* ===== CONTEÚDO ===== */
-.conteudo {
-  display: flex;
-  height: calc(100vh - 190px);
-}
-
-#mapa {
-  flex: 2;
-  height: 100%;
-  border-right: 2px solid #D4AF37;
-}
-
-.lista-veiculos {
-  flex: 1;
-  overflow-y: auto;
-  background: #fffdf8;
-  padding: 1rem;
-}
-
-.veiculo-card {
-  background: #fff;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  margin-bottom: 1rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  transition: all 0.3s;
-}
-
-.veiculo-card:hover {
-  transform: translateY(-4px);
-  border-color: #D4AF37;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.2);
-}
-
-.veiculo-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 10px 10px 0 0;
-}
-
-.veiculo-info {
-  padding: 0.8rem;
-  text-align: center;
-}
-
-.veiculo-info h3 {
-  color: #4B2E05;
-  margin: 0.3rem 0;
-  font-size: 1.1rem;
-}
-
-.veiculo-info p {
-  color: #7B3F00;
-  font-size: 0.9rem;
-}
-
-.btn-ver {
-  display: inline-block;
-  background: #D4AF37;
-  color: #4B2E05;
-  padding: 0.4rem 1rem;
-  border-radius: 6px;
-  text-decoration: none;
-  margin-top: 0.5rem;
-  transition: all 0.3s;
-}
-
-.btn-ver:hover {
-  background: #8B5A00;
-  color: #fff;
-}
-
-/* ===== RODAPÉ ===== */
-footer {
-  background: #4B2E05;
-  color: #f5f1e6;
-  text-align: center;
-  padding: 1rem;
-}
+/* Rodapé */
+.footer{max-width:1200px;margin:24px auto 0;text-align:center;color:rgba(233,223,197,.85);border-top:1px solid var(--grid);padding-top:14px;}

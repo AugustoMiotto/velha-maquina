@@ -4,83 +4,102 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Velha Máquina - Clássicos à Venda</title>
+
+  <link rel="stylesheet" href="/velha-maquina/frontend/styles/navbar.css" />
   <link rel="stylesheet" href="/velha-maquina/frontend/styles/index.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
 </head>
 
 <body>
-  <!-- 🏁 Cabeçalho -->
   <header class="header">
-    <div class="logo">
-      <h1>🚗 Velha Máquina</h1>
-      <p>Clássicos que contam histórias</p>
-    </div>
+    <a class="brand" href="index.html">
+      <img src="/velha-maquina/frontend/assets/logo.png" alt="Velha Máquina" onerror="this.style.display='none'">
+      <span class="logo-text">
+        <strong class="logo-title">Velha Máquina</strong>
+        <small class="logo-sub">Clássicos que contam histórias</small>
+      </span>
+    </a>
     <nav class="navbar">
       <a href="index.html" class="active">Início</a>
+      <a href="encontrar.html">Encontrar</a>
       <a href="anunciar.html">Anunciar</a>
-      <a href="encontrar.html">Encontrar Veículos</a>
-      <a href="#contato">Contato</a>
     </nav>
   </header>
 
-  <!-- 🎞️ Hero com carrossel de fundo -->
-<section class="hero-carousel">
-  <div class="slides">
-    <div class="slide active" style="background-image: url('/velha-maquina/frontend/assets/imagem1.png');"></div>
-    <div class="slide" style="background-image: url('/velha-maquina/frontend/assets/imagem2.jpeg');"></div>
-    <div class="slide" style="background-image: url('/velha-maquina/frontend/assets/imagem3.png');"></div>
-  </div>
-  <div class="hero-content">
-    <h2>Reviva a Era de Ouro dos Automóveis</h2>
-    <p>Explore, anuncie e encontre clássicos inesquecíveis</p>
-    <a href="encontrar.html" class="btn-destaque">Ver Anúncios</a>
-  </div>
-</section>
-
-<!-- 🏆 Destaques -->
-<section class="destaques">
-  <h2>🚘 Clássicos em Destaque</h2>
-  <p>Seleção de veículos imperdíveis</p>
-  <div id="destaques-container" class="carros-grid">
-    <p>Carregando destaques...</p>
-  </div>
-</section>
-
-
-  <!-- 🏁 Sobre nós -->
-  <section class="sobre">
-    <div class="sobre-texto">
-      <h2>Sobre a Velha Máquina</h2>
-      <p>
-        Nascemos da paixão por carros antigos e pelo desejo de preservar a essência dos veículos que marcaram gerações.  
-        Aqui, cada motor tem uma história, e cada carro é uma lembrança viva do tempo em que dirigir era uma arte.
-      </p>
-      <p>
-        Nosso objetivo é conectar colecionadores e apaixonados por automóveis, criando uma comunidade onde cada anúncio é uma peça de história.
-      </p>
-      <a href="anunciar.html" class="btn">Anuncie seu Clássico</a>
+  <!-- HERO + CARROSSEL -->
+  <section class="hero-carousel">
+    <div class="slides">
+      <div class="slide active" style="background-image:url('/velha-maquina/frontend/assets/imagem1.jpeg');"></div>
+      <div class="slide" style="background-image:url('/velha-maquina/frontend/assets/imagem2.jpeg');"></div>
+      <div class="slide" style="background-image:url('/velha-maquina/frontend/assets/imagem3.jpeg');"></div>
     </div>
-    <div class="sobre-imagem">
-      <img src="/velha-maquina/frontend/assets/img/imagem4.jpeg" alt="Carro clássico antigo">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <h1>Clássicos que atravessam gerações</h1>
+      <p>Descubra, anuncie e negocie carros antigos com segurança e curadoria.</p>
+      <div class="hero-cta">
+        <a href="encontrar.html" class="btn-hero">Explorar anúncios</a>
+        <a href="anunciar.html" class="btn-hero ghost">Anunciar meu clássico</a>
+      </div>
+    </div>
+    <div class="carousel-dots" id="carousel-dots"></div>
+  </section>
+
+  <!-- CATEGORIAS RÁPIDAS (ajustadas) -->
+  <section class="categorias">
+    <h2>Categorias populares</h2>
+    <div class="tags">
+      <a class="tag" href="encontrar.html?categoria=antigo">Antigo</a>
+      <a class="tag" href="encontrar.html?categoria=antigo-novo">Antigo Novo</a>
+      <a class="tag" href="encontrar.html?categoria=antigo-velho">Antigo Velho</a>
     </div>
   </section>
 
-  <!-- 📞 Contato -->
-  <section class="contato" id="contato">
-    <h2>Entre em Contato</h2>
-    <p>Tem um clássico para vender ou quer saber mais? Fale conosco!</p>
-    <div class="contato-info">
-      <p>📧 contato@velhamaquina.com.br</p>
-      <p>📞 (51) 99999-9999</p>
-      <p>📍 Porto Alegre - RS</p>
+  <!-- DESTAQUES -->
+  <section class="destaques">
+    <div class="top">
+      <h2>✨ Clássicos em Destaque</h2>
+      <p class="sub">Nossa curadoria semanal</p>
+    </div>
+    <div id="destaques-container" class="carros-grid">
+      <p>Carregando destaques...</p>
     </div>
   </section>
 
-  <!-- ⚙️ Rodapé -->
-  <footer>
-    <p>© 2025 Velha Máquina - Todos os direitos reservados</p>
+  <!-- LINHA DO TEMPO (história) -->
+  <section class="timeline">
+    <h2>Nossa jornada</h2>
+    <div class="tl-grid">
+      <div class="tl-item"><span class="ano">2016</span><p>Primeiros encontros entre entusiastas e colecionadores.</p></div>
+      <div class="tl-item"><span class="ano">2018</span><p>Comunidade online e primeiros leilões independentes.</p></div>
+      <div class="tl-item"><span class="ano">2021</span><p>Nasce a Velha Máquina com curadoria e mapa integrado.</p></div>
+      <div class="tl-item"><span class="ano">2025</span><p>Plataforma nacional com catálogo de clássicos em expansão.</p></div>
+    </div>
+  </section>
+
+  <!-- HISTÓRIA AMPLIADA + CONTATO -->
+  <section class="sobre-expanded" id="contato">
+    <div class="historia">
+      <h2>Nossa história</h2>
+      <p>Fundada por apaixonados por automóveis, a Velha Máquina nasceu para manter vivas as memórias que os clássicos carregam. De garagens de bairro a coleções raras, conectamos pessoas a carros que contam histórias.</p>
+      <p>Com curadoria cuidadosa e uma comunidade engajada, cada anúncio é tratado como peça de acervo — com respeito à originalidade e transparência.</p>
+      <p>Seguimos expandindo, preservando a cultura automotiva e aproximando novos entusiastas desse universo atemporal.</p>
+    </div>
+    <div class="contato">
+      <h3>Contato</h3>
+      <ul>
+        <li>📧 contato@velhamaquina.com.br</li>
+        <li>📞 (51) 99999-9999</li>
+        <li>📍 Porto Alegre - RS</li>
+        <li>⏰ Seg–Sex, 9h às 18h</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>© 2025 Velha Máquina — Todos os direitos reservados</p>
   </footer>
 
   <script src="/velha-maquina/frontend/scripts/index.js"></script>

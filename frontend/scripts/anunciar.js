@@ -136,6 +136,43 @@ async function handleAnuncioSubmit(event) {
   }
 }
 
+// === Pré-visualização de imagens selecionadas no input#imagens ===
+document.addEventListener('DOMContentLoaded', setupPreviewImagens);
+
+function setupPreviewImagens() {
+  const input = document.getElementById('imagens');
+  if (!input) return;
+
+  // Cria o container de preview (se não existir)
+  let grid = document.getElementById('preview-imagens');
+  if (!grid) {
+    grid = document.createElement('div');
+    grid.id = 'preview-imagens';
+    grid.className = 'preview-grid';
+    input.insertAdjacentElement('afterend', grid);
+  }
+
+  input.addEventListener('change', () => {
+    grid.innerHTML = ''; // limpa previews anteriores
+    const files = Array.from(input.files || []);
+    if (!files.length) return;
+
+    files.forEach(file => {
+      if (!file.type.startsWith('image/')) return;
+      const url = URL.createObjectURL(file);
+      const item = document.createElement('div');
+      item.className = 'preview-item';
+      item.innerHTML = `
+        <img src="${url}" alt="${file.name}">
+        <span class="preview-name" title="${file.name}">${file.name}</span>
+      `;
+      grid.appendChild(item);
+      // Libera o blob quando não for mais necessário
+      item.querySelector('img').addEventListener('load', () => URL.revokeObjectURL(url), { once: true });
+    });
+  });
+}
+
 /* Inicialização */
 document.addEventListener('DOMContentLoaded', () => {
   inicializarMapa();

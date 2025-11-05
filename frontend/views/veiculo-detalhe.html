@@ -1,27 +1,43 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Velha Máquina - Detalhes</title>
-    <link rel="stylesheet" href="../styles/home.css" />
-    <link rel="stylesheet" href="../styles/detalhe.css" /> </head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velha Máquina - Detalhes</title>
+
+  <!-- sua navbar e estilos -->
+  <link rel="stylesheet" href="/velha-maquina/frontend/styles/navbar.css" />
+  <link rel="stylesheet" href="../styles/detalhe.css" />
+
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+</head>
 <body>
-    <header>
-        <h1>🚗 Velha Máquina</h1>
-        <a href="encontrar.html" class="voltar-link">&larr; Voltar para a lista</a>
-    </header>
+  <header class="header">
+    <a class="brand" href="index.html">
+      <img src="/velha-maquina/frontend/assets/logo.png" alt="Velha Máquina" onerror="this.style.display='none'">
+      <span class="logo-text">
+        <strong class="logo-title">Velha Máquina</strong>
+        <small class="logo-sub">Clássicos que contam histórias</small>
+      </span>
+    </a>
+    <nav class="navbar">
+      <a href="encontrar.html" class="active">&larr; Voltar</a>
+      <a href="index.html">Início</a>
+      <a href="anunciar.html">Anunciar</a>
+    </nav>
+  </header>
 
-    <main>
-        <section id="detalhe-container">
-            <p>Carregando detalhes do veículo...</p>
-        </section>
-    </main>
+  <main>
+    <section id="detalhe-container">
+      <p>Carregando detalhes do veículo...</p>
+    </section>
+  </main>
 
-    <footer>
-        <p>© 2025 Velha Máquina - Todos os direitos reservados</p>
-    </footer>
+  <footer class="footer">
+    <p>© 2025 Velha Máquina — Todos os direitos reservados</p>
+  </footer>
 
-    <script src="../scripts/detalhe.js"></script>
+  <!-- IMPORTANTE: use defer para garantir DOM pronto -->
+  <script defer src="../scripts/detalhe.js"></script>
 </body>
 </html>

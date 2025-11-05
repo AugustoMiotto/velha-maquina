@@ -5,38 +5,48 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Encontrar Veículos | Velha Máquina</title>
 
+  <link rel="stylesheet" href="/velha-maquina/frontend/styles/navbar.css" />
   <link rel="stylesheet" href="/velha-maquina/frontend/styles/encontrar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet" />
 </head>
 
 <body>
   <header class="header">
-    <div class="logo">
-      <h1>🚗 Velha Máquina</h1>
-      <p>Clássicos que contam histórias</p>
-    </div>
+    <a class="brand" href="index.html">
+      <img src="/velha-maquina/frontend/assets/logo.png" alt="Velha Máquina" onerror="this.style.display='none'">
+      <span class="logo-text">
+        <strong class="logo-title">Velha Máquina</strong>
+        <small class="logo-sub">Clássicos que contam histórias</small>
+      </span>
+    </a>
     <nav class="navbar">
       <a href="index.html">Início</a>
-      <a href="anunciar.html">Anunciar</a>
       <a href="encontrar.html" class="active">Encontrar</a>
+      <a href="anunciar.html">Anunciar</a>
     </nav>
   </header>
 
-  <main class="encontrar-container">
-    <section class="filtros">
-      <input type="text" id="busca" placeholder="Buscar por modelo, cidade ou categoria..." />
-      <button id="btn-filtrar">🔍 Buscar</button>
+  <main class="encontrar-wrap">
+    <section class="filtros" aria-label="Barra de busca">
+      <label for="busca">Buscar</label>
+      <div class="filtros-row">
+        <input type="text" id="busca" placeholder="Modelo, cidade ou categoria..." />
+        <button id="btn-filtrar" class="btn">🔍 Buscar</button>
+      </div>
     </section>
 
-    <section class="conteudo">
-      <div id="mapa"></div>
-      <div class="lista-veiculos" id="lista-veiculos">
+    <section class="grid50">
+      <div id="mapa" class="mapa" aria-label="Mapa de anúncios"></div>
+      <div class="lista-veiculos" id="lista-veiculos" aria-live="polite">
         <p>Carregando anúncios...</p>
       </div>
     </section>
   </main>
 
+  <footer class="footer">
+    <p>© 2025 Velha Máquina — Todos os direitos reservados</p>
+  </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="/velha-maquina/frontend/scripts/encontrar.js"></script>

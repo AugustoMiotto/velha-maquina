@@ -4,22 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Velha Máquina - Anunciar Veículo</title>
-  <link rel="stylesheet" href="../styles/anunciar.css">
 
-  <!-- Fonte vintage -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/velha-maquina/frontend/styles/navbar.css" />
+  <link rel="stylesheet" href="../styles/anunciar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
 
-  <!-- Leaflet -->
+  <!-- Leaflet (mantido) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
-  <header class="topo">
-    <h1>🚗 Velha Máquina</h1>
-    <nav>
+  <header class="header">
+    <a class="brand" href="index.html">
+      <img src="/velha-maquina/frontend/assets/logo.png" alt="Velha Máquina" onerror="this.style.display='none'">
+      <span class="logo-text">
+        <strong class="logo-title">Velha Máquina</strong>
+        <small class="logo-sub">Clássicos que contam histórias</small>
+      </span>
+    </a>
+    <nav class="navbar">
       <a href="index.html">Início</a>
       <a href="encontrar.html">Encontrar</a>
-      <a href="anunciar.html" class="ativo">Anunciar</a>
+      <a href="anunciar.html" class="active">Anunciar</a>
     </nav>
   </header>
 
@@ -27,106 +33,109 @@
     <h2>Anuncie seu carro clássico</h2>
 
     <form id="form-anuncio" enctype="multipart/form-data" class="form-anuncio">
-      <div class="grupo">
-        <label for="categoria">Categoria</label>
-        <select id="categoria" required>
-          <option value="">Carregando...</option>
-        </select>
+      <!-- grade 1: categoria / modelo / marca -->
+      <div class="grid g-3">
+        <div class="campo">
+          <label for="categoria">Categoria</label>
+          <select id="categoria" required>
+            <option value="">Carregando...</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="modelo-nome">Modelo</label>
+          <input type="text" id="modelo-nome" placeholder="Ex: Fusca 1972" required />
+        </div>
+        <div class="campo">
+          <label for="marca-nome">Marca</label>
+          <input type="text" id="marca-nome" placeholder="Ex: Volkswagen" required />
+        </div>
       </div>
 
-      <div class="grupo">
-        <label for="modelo-nome">Modelo</label>
-        <input type="text" id="modelo-nome" placeholder="Ex: Fusca 1972" required>
-      </div>
-
-      <div class="grupo">
-        <label for="marca-nome">Marca</label>
-        <input type="text" id="marca-nome" placeholder="Ex: Volkswagen" required>
-      </div>
-
-      <div class="grupo-duplo">
-        <div>
+      <!-- grade 2: anos / preço / km -->
+      <div class="grid g-4">
+        <div class="campo">
           <label for="ano-fabricacao">Ano de Fabricação</label>
-          <input type="number" id="ano-fabricacao" required>
+          <input type="number" id="ano-fabricacao" required />
         </div>
-        <div>
+        <div class="campo">
           <label for="ano-modelo">Ano do Modelo</label>
-          <input type="number" id="ano-modelo" required>
+          <input type="number" id="ano-modelo" required />
         </div>
-      </div>
-
-      <div class="grupo-duplo">
-        <div>
+        <div class="campo">
           <label for="preco">Preço (R$)</label>
-          <input type="number" id="preco" required>
+          <input type="number" id="preco" required />
         </div>
-        <div>
+        <div class="campo">
           <label for="quilometragem">Quilometragem</label>
-          <input type="number" id="quilometragem" required>
+          <input type="number" id="quilometragem" required />
         </div>
       </div>
 
-      <div class="grupo-duplo">
-        <div>
+      <!-- grade 3: cor / placa -->
+      <div class="grid g-2">
+        <div class="campo">
           <label for="cor">Cor</label>
-          <input type="text" id="cor" required>
+          <input type="text" id="cor" required />
         </div>
-        <div>
+        <div class="campo">
           <label for="placa">Placa</label>
-          <input type="text" id="placa" required>
+          <input type="text" id="placa" required />
         </div>
       </div>
 
-      <div class="grupo">
+      <!-- descrição -->
+      <div class="campo">
         <label for="descricao">Descrição</label>
         <textarea id="descricao" rows="4" placeholder="Fale mais sobre o veículo"></textarea>
       </div>
 
-      <div class="grupo">
-        <label for="prop-nome">Nome do Proprietário</label>
-        <input type="text" id="prop-nome" required>
-      </div>
-
-      <div class="grupo-duplo">
-        <div>
+      <!-- proprietário -->
+      <div class="grid g-3">
+        <div class="campo">
+          <label for="prop-nome">Nome do Proprietário</label>
+          <input type="text" id="prop-nome" required />
+        </div>
+        <div class="campo">
           <label for="prop-email">Email</label>
-          <input type="email" id="prop-email" required>
+          <input type="email" id="prop-email" required />
         </div>
-        <div>
+        <div class="campo">
           <label for="prop-telefone">Telefone</label>
-          <input type="tel" id="prop-telefone" required>
+          <input type="text" id="prop-telefone" required />
         </div>
       </div>
 
-  <label for="endereco">Endereço:</label>
-  <input
-    type="text"
-    id="endereco"
-    placeholder="Rua, número, cidade..."
-    required
-  />
-  <ul id="sugestoes-endereco" class="sugestoes-list"></ul>
+      <!-- endereço + autocomplete (mantido) -->
+      <div class="campo">
+        <label for="endereco">Endereço</label>
+        <input type="text" id="endereco" placeholder="Rua, número, cidade..." required />
+        <ul id="sugestoes-endereco" class="sugestoes-list"></ul>
 
-  <input type="hidden" id="latitude" name="latitude" />
-  <input type="hidden" id="longitude" name="longitude" />
-  <input type="hidden" id="cidade" name="cidade" />
-  <input type="hidden" id="estado" name="estado" />
-</div>
+        <!-- campos ocultos que o JS preenche -->
+        <input type="hidden" id="latitude" name="latitude" />
+        <input type="hidden" id="longitude" name="longitude" />
+        <input type="hidden" id="cidade" name="cidade" />
+        <input type="hidden" id="estado" name="estado" />
+      </div>
 
-
+      <!-- mapa (Leaflet) -->
       <div id="mapa" class="mapa"></div>
 
-      <div class="grupo">
+      <!-- imagens -->
+      <div class="campo">
         <label for="imagens">Imagens do veículo</label>
-        <input type="file" id="imagens" accept="image/*" multiple required>
+        <input type="file" id="imagens" accept="image/*" multiple required />
       </div>
 
-      <button type="submit" id="btn-enviar" class="btn-vintage">Enviar Anúncio</button>
-      <p id="status-envio"></p>
+      <!-- BOTÃO NO FINAL (fixo na página, sem toolbar) -->
+      <div class="acoes-form">
+        <button type="submit" id="btn-enviar" class="btn-primary">Enviar Anúncio</button>
+        <p id="status-envio" class="status"></p>
+      </div>
     </form>
   </main>
 
-  <footer>
+  <footer class="footer">
     <p>© 2025 Velha Máquina — Todos os direitos reservados</p>
   </footer>
 
