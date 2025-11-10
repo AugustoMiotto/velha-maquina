@@ -1,10 +1,17 @@
 // /frontend/scripts/detalhe.js
-// Corrigido: exibe APENAS o nome digitado no anúncio (proprietario.nomeProprietario), nunca o e-mail.
-// Robusto: se vier via ?data= sem proprietario, busca /veiculos/:id e mescla antes de renderizar.
+// Corrigido: decodifica ?data= em UTF-8 (sem quebrar acentos).
+// Mantém o nome EXATO digitado no anúncio (proprietario.nomeProprietario).
 
 (() => {
   const $  = (s, el = document) => el.querySelector(s);
   const $$ = (s, el = document) => Array.from(el.querySelectorAll(s));
+
+  /* ==== Base64 seguro para Unicode (UTF-8) ==== */
+  function b64DecodeUtf8(b64) {
+    const bin = atob(b64);
+    const bytes = new Uint8Array([...bin].map(c => c.charCodeAt(0)));
+    return new TextDecoder().decode(bytes);
+  }
 
   document.addEventListener('DOMContentLoaded', init);
 
@@ -19,13 +26,13 @@
     // 2) Normaliza o primeiro pacote de dados
     let d = normalize(raw);
 
-    // 3) Se o vendedor veio sem nome (caso típico do ?data=), enriquecemos com a API /veiculos/:id
+    // 3) Enriquecer com API se faltou vendedor/nome
     const idFinal = idFromURL || raw?.id_veiculo || raw?.id || d?.id;
     if ((!d?.vendedor?.nome || d.vendedor.nome.trim() === '') && idFinal) {
       const apiRaw = await tryAPIOnce(idFinal);
       if (apiRaw) {
         const dApi = normalize(apiRaw);
-        d = mergeVehiclePrefAPI(d, dApi); // mescla, priorizando o que vier completo da API
+        d = mergeVehiclePrefAPI(d, dApi);
       }
     }
 
@@ -42,9 +49,12 @@
     try{
       const raw = url.searchParams.get('data');
       if (!raw) return null;
-      const json = atob(decodeURIComponent(raw));
-      return JSON.parse(json);
-    }catch{ return null; }
+      const jsonUtf8 = b64DecodeUtf8(decodeURIComponent(raw));
+      return JSON.parse(jsonUtf8);
+    }catch(e){
+      console.warn('Falha ao decodificar base64 UTF-8:', e);
+      return null;
+    }
   }
   function tryStorage(id){
     try{
@@ -68,20 +78,17 @@
     if (root) root.innerHTML = `<p>${escapeHTML(msg)}</p>`;
   }
 
-  /* ---------- merge (preferindo API quando faltar algo no mini) ---------- */
+  /* ---------- merge ---------- */
   function mergeVehiclePrefAPI(base, api){
     if (!api) return base;
     const out = { ...base };
 
-    // se API tiver vendedor/nome válido, usa ele
     if (api.vendedor?.nome) out.vendedor = { ...out.vendedor, ...api.vendedor };
     else if (!out.vendedor) out.vendedor = api.vendedor;
 
-    // completa imagens e descrição se estiverem melhores na API
     if ((!out.imagens || !out.imagens.length) && api.imagens?.length) out.imagens = api.imagens.slice();
     if ((!out.descricao || out.descricao.trim()==='') && api.descricao) out.descricao = api.descricao;
 
-    // completa outros campos vazios
     const keys = ['categoria','modelo','marca','anoFabricacao','anoModelo','preco','quilometragem','cor','placa','opcionais'];
     for (const k of keys){
       if (out[k]==null || out[k]==='' || (Array.isArray(out[k]) && !out[k].length)) {
@@ -89,24 +96,18 @@
       }
     }
 
-    // id
     out.id = out.id ?? api.id ?? api.id_veiculo ?? null;
-
     return out;
   }
 
   /* ---------- normalização ---------- */
-  function normalize(raw) {
-    // aceita tanto objeto direto quanto {data: obj} quanto mini do encontrar/home
-    const n = raw?.data || raw;
+  function normalize(n) {
+    n = n?.data || n;
     if (!n || typeof n !== 'object') return null;
 
-    // imagens
     let imagens = n.imagens || n.fotos || n.images || n.photos || [];
     if (Array.isArray(imagens)) {
-      imagens = imagens
-        .map(i => (typeof i === 'string' ? i : i?.urlImagem))
-        .filter(Boolean);
+      imagens = imagens.map(i => (typeof i === 'string' ? i : i?.urlImagem)).filter(Boolean);
     } else {
       imagens = [];
     }
@@ -124,19 +125,10 @@
     const placa = n.placa || n.placaVeiculo || "";
 
     const descricao =
-      n.descricao ||
-      n.descricaoVeiculo ||
-      n.descricao_anuncio ||
-      n.descricaoAnuncio ||
-      n.observacoes ||
-      n.obs ||
-      "";
+      n.descricao || n.descricaoVeiculo || n.descricao_anuncio ||
+      n.descricaoAnuncio || n.observacoes || n.obs || "";
 
-    // --- vendedor/proprietário ---
-    // Prioriza SEMPRE o formato da sua API de detalhe:
-    // proprietario: { nomeProprietario, email, telefone, cidade, estado }
     let vendedor = { nome:"", email:"", telefone:"", cidade:"", estado:"" };
-
     if (n.proprietario) {
       vendedor = {
         nome: (n.proprietario.nomeProprietario || "").trim(),
@@ -146,7 +138,6 @@
         estado: n.proprietario.estado || ""
       };
     } else if (n.vendedor) {
-      // fallback para mini-objeto vindo do Encontrar/Home
       vendedor = {
         nome: (n.vendedor.nome || "").trim(),
         email: n.vendedor.email || "",
@@ -156,7 +147,6 @@
       };
     }
 
-    // itens opcionais
     let opcionais = n.opcionais || n.itens || n.acessorios || [];
     if (typeof opcionais === "string")
       opcionais = opcionais.split(",").map(s => s.trim()).filter(Boolean);
@@ -169,7 +159,7 @@
       anoModelo: anoMod,
       preco, quilometragem, cor, placa,
       descricao,
-      vendedor,     // <-- garantido
+      vendedor,
       imagens, opcionais
     };
   }
@@ -253,7 +243,6 @@
     const btnW = $('#btn-whats');
     const btnE = $('#btn-email');
 
-    // Whats
     if (tdTel && btnW) {
       const raw = (tdTel.getAttribute('data-whats') || tdTel.textContent || '').replace(/\D+/g, '');
       if (raw) {
@@ -266,7 +255,6 @@
       }
     }
 
-    // Email
     if (tdEmail && btnE) {
       const email = (tdEmail.textContent || '').trim();
       if (email && email.includes('@')) {

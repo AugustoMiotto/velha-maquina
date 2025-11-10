@@ -3,6 +3,15 @@ const API_URL = "http://26.122.130.40:8080/veiculos";
 let mapa;
 let marcadores = [];
 
+/* ==== Base64 seguro para Unicode (UTF-8) ==== */
+function b64EncodeUtf8(str) {
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  bytes.forEach(b => bin += String.fromCharCode(b));
+  return btoa(bin);
+}
+
+/* ==== Helpers gerais ==== */
 function toTitleFromEmail(email){
   try{
     const local = String(email).split('@')[0] || '';
@@ -23,17 +32,27 @@ function pickOwnerName(vend = {}, n = {}){
   if (/@/.test(em)) return toTitleFromEmail(em);
   return '';
 }
+// normaliza string (case/acentos) para comparação
+function norm(s){
+  return String(s||'')
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // tira acentos
+    .toLowerCase().trim();
+}
 
+// mapeia slug -> rótulo exato usado no backend
+function categoriaLabelFromSlug(slug){
+  const s = norm(slug);
+  if (s === 'antigo') return 'Antigo';
+  if (s === 'antigo-novo' || s === 'antigonovo') return 'Antigo Novo';
+  if (s === 'antigo-velho' || s === 'antigovelho') return 'Antigo Velho';
+  return null;
+}
 
 function buildMini(v) {
   const imagens = Array.isArray(v.imagens) ? v.imagens.map(i => i?.urlImagem).filter(Boolean) : [];
 
-  // pega o objeto de proprietário (como vem do backend)
   const proprietario = v.proprietario || v.vendedor || v.anunciante || v.usuario || v.user || {};
-
-  // agora, pegamos o nome EXATAMENTE do campo que o usuário digitou
-  // no formulário de anunciar
-  const nomeProprietario = proprietario.nome || v.nomeProprietario || v.nome || "";
+  const nomeProprietario = proprietario.nomeProprietario || proprietario.nome || v.nomeProprietario || v.nome || "";
 
   const descricao =
     v.descricao || v.descricaoVeiculo || v.descricao_anuncio ||
@@ -52,7 +71,7 @@ function buildMini(v) {
     placa: v.placa || v.placaVeiculo || "",
     descricao,
     vendedor: {
-      nome: nomeProprietario, // 🔥 aqui vai o nome exato do cadastro
+      nome: nomeProprietario || pickOwnerName(proprietario, v),
       email: proprietario.email || v.email || "",
       telefone: proprietario.telefone || proprietario.whatsapp || proprietario.phone || "",
       cidade: proprietario.cidade || "",
@@ -61,8 +80,6 @@ function buildMini(v) {
     imagens
   };
 }
-
-
 
 function currencyBR(v) {
   if (v === undefined || v === null || v === "") return "—";
@@ -82,13 +99,12 @@ function escHTML(s) {
 function jsonAttr(obj) {
   return JSON.stringify(obj).replace(/"/g, "&quot;");
 }
-// Base64 seguro para URL
+// Base64 seguro + pronto para URL (?data=)
 function toB64(obj) {
   const s = JSON.stringify(obj);
-  const b64 = btoa(unescape(encodeURIComponent(s)));
+  const b64 = b64EncodeUtf8(s);
   return encodeURIComponent(b64);
 }
-// Caminho relativo para o arquivo de detalhes
 function detalhePath() {
   return location.pathname.replace(/[^/]+$/, 'veiculo-detalhe.html');
 }
@@ -104,8 +120,11 @@ function inicializarMapa() {
   }).addTo(mapa);
 }
 
-/* ===== Carregar veículos ===== */
-async function carregarVeiculos(filtro = "") {
+/* ===== Carregar veículos =====
+   filtroTexto: termo livre (modelo/categoria/cidade)
+   categoriaExata: rótulo exato ('Antigo', 'Antigo Novo', 'Antigo Velho') para filtrar da home
+*/
+async function carregarVeiculos(filtroTexto = "", categoriaExata = null) {
   const lista = document.getElementById("lista-veiculos");
   lista.innerHTML = "<p>Carregando anúncios...</p>";
 
@@ -114,12 +133,19 @@ async function carregarVeiculos(filtro = "") {
     if (!resp.ok) throw new Error("Falha ao buscar veículos");
     const veiculos = await resp.json();
 
-    const termo = filtro.toLowerCase();
-    const filtrados = veiculos.filter((v) =>
-      (v.modelo?.nomeModelo || "").toLowerCase().includes(termo) ||
-      (v.categoria?.nome_categoria || "").toLowerCase().includes(termo) ||
-      (v.proprietario?.cidade || "").toLowerCase().includes(termo)
-    );
+    const termo = norm(filtroTexto);
+    const catNorm = categoriaExata ? norm(categoriaExata) : null;
+
+    const filtrados = veiculos.filter((v) => {
+      const modelo = norm(v.modelo?.nomeModelo);
+      const categoria = norm(v.categoria?.nome_categoria);
+      const cidade = norm(v.proprietario?.cidade);
+
+      const passTexto = !termo || modelo.includes(termo) || categoria.includes(termo) || cidade.includes(termo);
+      const passCategoria = !catNorm || categoria === catNorm;
+
+      return passTexto && passCategoria;
+    });
 
     lista.innerHTML = "";
     marcadores.forEach((m) => mapa.removeLayer(m));
@@ -187,57 +213,46 @@ async function carregarVeiculos(filtro = "") {
 
 document.addEventListener("DOMContentLoaded", () => {
   inicializarMapa();
-  carregarVeiculos();
+
+  // Lê ?categoria= da URL e aplica filtro exato
+  const params = new URLSearchParams(location.search);
+  const slug = params.get('categoria'); // exemplo: antigo-novo
+  const catLabel = slug ? categoriaLabelFromSlug(slug) : null;
+
+  if (catLabel) {
+    // mostra a escolha no campo de busca para o usuário entender o filtro aplicado
+    const input = document.getElementById("busca");
+    if (input) input.value = catLabel;
+    carregarVeiculos(catLabel, catLabel);
+  } else {
+    carregarVeiculos();
+  }
+
+  // Clique em "Buscar" limpa o filtro fixo de categoria e usa só o texto
   document.getElementById("btn-filtrar").addEventListener("click", () => {
     const valor = document.getElementById("busca").value.trim();
-    carregarVeiculos(valor);
+    carregarVeiculos(valor, null);
   });
 });
 
-// Salvar dados no clique
+// Salvar dados no clique (fallback para detalhe)
 document.addEventListener('click', (e) => {
   const link = e.target.closest('.btn-ver');
   if (!link) return;
   try {
-    const id  = link.getAttribute('data-id');
+    const id  = link.getAttribute('data-id') || new URL(link.href).searchParams.get('id');
     const raw = link.getAttribute('data-json');
-    if (!raw) return;
-    const obj = JSON.parse(raw);
-    sessionStorage.setItem('vm:lastVehicle', JSON.stringify(obj));
-    const map = JSON.parse(sessionStorage.getItem('vm:vehiclesById') || '{}');
-    if (id) map[id] = obj;
-    sessionStorage.setItem('vm:vehiclesById', JSON.stringify(map));
-    localStorage.setItem('vm:lastVehicle', JSON.stringify(obj));
-  } catch (err) {
-    console.warn('[encontrar] erro ao preparar detalhe', err);
-  }
-});
-
-// encontrar.js — salva o veículo clicado para fallback de detalhe
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.btn-ver'); // mantenha a classe do seu botão/link
-  if (!btn) return;
-
-  try {
-    // Espera-se que o botão tenha data-id e (opcionalmente) data-json com o objeto
-    const id = btn.getAttribute('data-id') || new URL(btn.href).searchParams.get('id');
-
-    // Se você tiver o objeto do veículo no momento da renderização,
-    // inclua-o no data-json (stringify). Ex: <a class="btn-ver" data-id="123" data-json='{"id":123,"marca":"..."}' href="veiculo-detalhe.html?id=123">
-    const raw = btn.getAttribute('data-json');
     if (raw) {
       const obj = JSON.parse(raw);
       sessionStorage.setItem('vm:lastVehicle', JSON.stringify(obj));
-      // Opcional: mantém um map id->obj para abrir em outra aba
       const map = JSON.parse(sessionStorage.getItem('vm:vehiclesById') || '{}');
-      if (id) { map[id] = obj; sessionStorage.setItem('vm:vehiclesById', JSON.stringify(map)); }
-      // redundância em localStorage
+      if (id) map[id] = obj;
+      sessionStorage.setItem('vm:vehiclesById', JSON.stringify(map));
       localStorage.setItem('vm:lastVehicle', JSON.stringify(obj));
     } else if (id) {
-      // Sem data-json, ainda assim guardamos um "mínimo" para a rota por id
       sessionStorage.setItem('vm:lastVehicle', JSON.stringify({ id }));
     }
   } catch (err) {
-    console.warn('[encontrar] não foi possível salvar fallback do veículo', err);
+    console.warn('[encontrar] erro ao preparar detalhe', err);
   }
 });

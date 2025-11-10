@@ -1,7 +1,7 @@
 /* Anunciar – fundo com imagem, select/number custom e botão ao final */
 :root{
   --overlay:rgba(14,11,8,.6);
-  --ink:#b8a052;
+  --ink:rgba(233,223,197,.85);
   --ink-muted:#c9bc94;
   --sepia:#d7b65e;
   --sepia-deep:#a8862f;
@@ -51,7 +51,7 @@ body{
 .campo textarea{
   width:100%; padding:11px 12px; border-radius:10px; outline:none;
   color:var(--ink);
-  background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.28));
+  background:linear-gradient(180deg, rgba(241, 241, 241, 0.08), rgba(0,0,0,.28));
   border:1px solid var(--grid);
   transition:border-color .12s ease, box-shadow .12s ease, background .12s ease;
   font-weight:700;              /* NEGRITO */
@@ -115,7 +115,7 @@ body{
 }
 
 .footer{
-  max-width:1060px; margin:24px auto 60px; text-align:center; color:rgba(184, 149, 63, 0.85);
+  max-width:1060px; margin:24px auto 60px; text-align:center; color:rgba(233,223,197,.85);
   border-top:1px solid rgba(255,255,255,.12); padding-top:14px;
 }
 
@@ -174,4 +174,37 @@ body{
 .preview-name{
   display:block; margin-top:6px; font-size:.8rem; color:var(--ink-muted);
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+
+/* ====== CORREÇÃO: fundo marrom no menu do SELECT ====== */
+
+/* cor do texto e fundo do menu aberto (Edge/Chrome/Safari/Firefox modernos) */
+.campo select option {
+  background-color: #1f1916;  /* marrom do formulário */
+  color: var(--ink);          /* texto claro */
+}
+
+/* WebKit (Chrome/Safari) precisa de força extra */
+.campo select {
+  color: var(--ink);
+  background-color: #1f1916;
+}
+
+/* cor do menu dropdown (Edge/Chrome) */
+select::-webkit-listbox {
+  background-color: #1f1916;
+  color: var(--ink);
+}
+
+/* Firefox usa este seletor interno */
+select:-moz-focusring option {
+  background-color: #1f1916 !important;
+  color: var(--ink) !important;
+}
+
+/* opcional: remove o branco de highlight */
+option:checked,
+option:hover {
+  background-color: rgba(215,182,94,.25) !important; /* sépia clara ao passar */
+  color: var(--ink) !important;
 }

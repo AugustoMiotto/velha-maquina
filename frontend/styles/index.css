@@ -1,7 +1,7 @@
 /* HOME – vintage profissional */
 :root{
   --bg:#0e0b08; --ink:#e9dfc5; --ink-muted:#cbbf96;
-  --sepia:#8f7b3e; --sepia-deep:#a8862f;
+  --sepia:#caaf5e; --sepia-deep:#a8862f;
   --grid:rgba(255,255,255,.07); --shadow:0 10px 30px rgba(0,0,0,.55);
 }
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -63,3 +63,135 @@ html,body{
 @media (max-width:700px){ .tl-grid{ grid-template-columns:1fr;} .hero-content h1{font-size:2rem;} }
 /* RODAPÉ */
 .footer{ max-width:1200px; margin:28px auto 80px; padding:20px; text-align:center; color:rgba(233,223,197,.85); border-top:1px solid var(--grid); }
+
+/* =============================
+   HERO / CARROSSEL RETRÔ IMERSIVO
+   ============================= */
+
+/* Aumenta a altura geral do carrossel (antes 50vh → agora 85vh) */
+.hero-carousel {
+  position: relative;
+  width: 100%;
+  height: 85vh;                 /* ocupa quase toda a tela */
+  max-height: 900px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(207,162,75,.22);
+  box-shadow: 0 16px 48px rgba(0,0,0,.55);
+}
+
+/* Slides ocupam toda a área */
+.hero-carousel .slides {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  transition: transform 1s ease;
+}
+
+.hero-carousel .slide {
+  flex: 0 0 100%;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.85) contrast(1.08) saturate(1.1);
+  transition: filter .5s ease, transform 6s ease;
+}
+
+/* Efeito leve de zoom animado no slide ativo */
+.hero-carousel .slide.active {
+  filter: brightness(0.95) contrast(1.15);
+  transform: scale(1.06);
+}
+
+/* Camada escura por cima das imagens (mantém legibilidade) */
+.hero-carousel .hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(12,9,7,0.6), rgba(12,9,7,0.85));
+  z-index: 1;
+}
+
+/* Conteúdo textual centralizado */
+.hero-carousel .hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 20px;
+  top: 48%;
+  transform: translateY(-50%);
+  text-align: center;
+  color: #f4e3c1;
+  text-shadow: 0 2px 6px rgba(0,0,0,.65);
+}
+
+.hero-carousel .hero-content h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 12px;
+}
+
+.hero-carousel .hero-content p {
+  font-size: 1.1rem;
+  color: rgba(233,223,197,.9);
+  margin-bottom: 22px;
+}
+
+/* Botões — estilo placa vintage */
+.hero-carousel .btn-hero {
+  display: inline-block;
+  margin: 0 8px;
+  padding: 11px 20px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  border-radius: 8px;
+  background: linear-gradient(180deg, var(--sepia), var(--sepia-deep));
+  color: #0f0b08;
+  border: 2px solid rgba(252, 248, 248, 0.15);
+  box-shadow: 0 8px 20px rgba(176,140,62,.28);
+  transition: transform .2s ease, filter .2s ease;
+}
+.hero-carousel .btn-hero:hover {
+  filter: brightness(1.08);
+  transform: translateY(-2px);
+}
+.hero-carousel .btn-hero.ghost {
+  background: transparent;
+  color: #f4e3c1;
+  border-color: rgba(255,255,255,.35);
+  box-shadow: 0 6px 18px rgba(0,0,0,.4);
+}
+.hero-carousel .btn-hero.ghost:hover {
+  background: rgba(255,255,255,.12);
+  color: #fff8e7;
+}
+
+/* Pontinhos de navegação (dourado vintage) */
+.carousel-dots {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 3;
+}
+.carousel-dots button {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  border: 1px solid rgba(207,162,75,.6);
+  cursor: pointer;
+  transition: background .3s ease, transform .3s ease;
+}
+.carousel-dots button.active {
+  background: #cfa24b;
+  transform: scale(1.2);
+}
+
+/* Responsivo */
+@media (max-width: 720px){
+  .hero-carousel{ height: 70vh; }
+  .hero-carousel .hero-content h1{ font-size: 1.9rem; }
+  .hero-carousel .hero-content p{ font-size: 1rem; }
+}
+
