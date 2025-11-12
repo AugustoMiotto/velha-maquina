@@ -35,7 +35,7 @@ INSERT INTO veiculo (id_proprietario, id_modelo, id_categoria, nome_veiculo, ano
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem, ordem) 
 VALUES 
-    (2, 'http://26.122.130.40/velha_maquina_imgs/opalafrenye.jpg', 0);
+    (2, 'http://26.122.130.40/velha_maquina_imgs/opalafrente.jpg', 0);
 
 INSERT INTO imagem_veiculo 
     (id_veiculo, url_imagem,  ordem) 

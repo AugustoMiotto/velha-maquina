@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -136,4 +138,161 @@ public class VeiculoController {
             return ResponseEntity.status(400).build(); // 400 Bad Request
         }
     }
+    @PutMapping("/editar/{id}")
+    public ResponseEntity<Veiculo> atualizarVeiculo(
+            @PathVariable Integer id,
+            @RequestParam(value = "imagens", required = false) List<MultipartFile> novasImagens,
+            @RequestParam("veiculoJson") String veiculoJson) {
+
+        try {
+            // --- ETAPA 1: Buscar o Veículo Existente ---
+            // Buscamos o veículo que já existe no banco
+            Veiculo veiculoExistente = veiculoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Veículo não encontrado com id: " + id));
+
+            // --- ETAPA 2: Converter o JSON com os dados atualizados ---
+            Veiculo veiculoAtualizado = objectMapper.readValue(veiculoJson, Veiculo.class);
+
+            // --- ETAPA 3: Lógica "Find or Create" (Reutilizada) ---
+
+            // Proprietario (Baseado no Email)
+            Proprietario propDoJson = veiculoAtualizado.getProprietario();
+            Optional<Proprietario> proprietarioExistenteOpt = proprietarioRepository.findByEmail(propDoJson.getEmail());
+
+            Proprietario propParaSalvar;
+
+            if (proprietarioExistenteOpt.isPresent()) {
+                // Se o proprietário EXISTE, atualizamos seus dados
+                propParaSalvar = proprietarioExistenteOpt.get();
+
+                // Copia os dados do formulário (JSON) para o objeto do banco
+                propParaSalvar.setNomeProprietario(propDoJson.getNomeProprietario());
+                propParaSalvar.setTelefone(propDoJson.getTelefone());
+
+                // Estes são os campos do mapa que SÃO salvos
+                propParaSalvar.setCidade(propDoJson.getCidade());
+                propParaSalvar.setEstado(propDoJson.getEstado());
+                propParaSalvar.setLatitude(propDoJson.getLatitude());
+                propParaSalvar.setLongitude(propDoJson.getLongitude());
+
+                // Salva as mudanças no proprietário existente
+                propParaSalvar = proprietarioRepository.save(propParaSalvar);
+
+            } else {
+                // Se NÃO existe, salva o novo proprietário que veio do JSON
+                // (que já tem os dados do mapa)
+                propParaSalvar = proprietarioRepository.save(propDoJson);
+            }
+
+            // Marca (Baseado no Nome)
+            Marca marcaDoJson = veiculoAtualizado.getModelo().getMarca();
+            Marca marcaParaSalvar = marcaRepository.findByNomeMarca(marcaDoJson.getNomeMarca())
+                    .orElseGet(() -> marcaRepository.save(marcaDoJson));
+
+            // --- ETAPA 4: Atualizar os Dados do Veículo ---
+
+            // Atualizamos o Modelo (que é um objeto complexo)
+            veiculoExistente.getModelo().setNomeModelo(veiculoAtualizado.getModelo().getNomeModelo());
+            veiculoExistente.getModelo().setMarca(marcaParaSalvar);
+
+            // Atualizamos o Proprietario e a Categoria
+            veiculoExistente.setProprietario(propParaSalvar);
+            veiculoExistente.setCategoria(veiculoAtualizado.getCategoria()); // Categoria já vem com ID
+
+            // Atualizamos os campos simples
+            veiculoExistente.setAnoFabricacao(veiculoAtualizado.getAnoFabricacao());
+            veiculoExistente.setAnoModelo(veiculoAtualizado.getAnoModelo());
+            veiculoExistente.setPreco(veiculoAtualizado.getPreco());
+            veiculoExistente.setQuilometragem(veiculoAtualizado.getQuilometragem());
+            veiculoExistente.setCor(veiculoAtualizado.getCor());
+            veiculoExistente.setDescricao(veiculoAtualizado.getDescricao());
+            veiculoExistente.setPlaca(veiculoAtualizado.getPlaca());
+
+            // --- ETAPA 5: Lidar com Novas Imagens ---
+            // (Nota: Este código apenas ADICIONA novas imagens, não remove as antigas)
+            if (novasImagens != null && !novasImagens.isEmpty()) {
+
+                // Descobre qual é a última ordem de imagem
+                int ordemAtual = veiculoExistente.getImagens().stream()
+                        .mapToInt(ImagemVeiculo::getOrdem)
+                        .max()
+                        .orElse(-1); // Se não houver imagens, começa em -1
+
+                for (MultipartFile arquivo : novasImagens) {
+                    if (arquivo.isEmpty()) continue;
+
+                    ordemAtual++; // Incrementa a ordem para a nova imagem
+
+                    String nomeOriginal = arquivo.getOriginalFilename();
+                    String extensao = nomeOriginal.substring(nomeOriginal.lastIndexOf("."));
+                    String nomeUnico = UUID.randomUUID().toString() + extensao;
+
+                    // Salva o arquivo no disco (usando java.nio.file)
+                    Files.copy(arquivo.getInputStream(), Paths.get(caminhoUpload + nomeUnico));
+
+                    String urlPublica = urlBase + nomeUnico;
+
+                    ImagemVeiculo imagem = new ImagemVeiculo();
+                    imagem.setUrlImagem(urlPublica);
+                    imagem.setOrdem(ordemAtual);
+                    imagem.setVeiculo(veiculoExistente); // Linka com o veículo existente
+
+                    veiculoExistente.getImagens().add(imagem);
+                }
+            }
+
+            // --- ETAPA 6: Salvar o Veículo Atualizado ---
+            Veiculo veiculoSalvo = veiculoRepository.save(veiculoExistente);
+            return ResponseEntity.ok(veiculoSalvo); // Retorna 200 OK
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(400).body(null); // 400 Bad Request
+        }
+    }
+    @DeleteMapping("/excluir/{id}")
+    public ResponseEntity<Void> excluirVeiculo(@PathVariable Integer id) {
+        try {
+            // 1. Primeiro, buscamos o veículo para saber quais imagens apagar
+            Veiculo veiculo = veiculoRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Veículo não encontrado"));
+
+            // 2. Apagamos os arquivos físicos do servidor
+            if (veiculo.getImagens() != null && !veiculo.getImagens().isEmpty()) {
+                System.out.println("Iniciando exclusão de arquivos...");
+                for (ImagemVeiculo imagem : veiculo.getImagens()) {
+                    try {
+                        // Extrai o nome do arquivo (ex: "uuid.jpg") da URL completa
+                        String nomeArquivo = imagem.getUrlImagem().substring(urlBase.length());
+                        File arquivoParaApagar = new File(caminhoUpload + nomeArquivo);
+
+                        if (arquivoParaApagar.exists()) {
+                            if (arquivoParaApagar.delete()) {
+                                System.out.println("Arquivo apagado: " + nomeArquivo);
+                            } else {
+                                System.out.println("Falha ao apagar: " + nomeArquivo);
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.err.println("Erro ao tentar apagar arquivo: " + e.getMessage());
+                        // Continua mesmo se um arquivo falhar
+                    }
+                }
+            }
+
+            // 3. Agora, apagamos o veículo do banco de dados
+            // O 'ON DELETE CASCADE' do seu SQL vai apagar as linhas da
+            // tabela 'imagem_veiculo' automaticamente.
+            veiculoRepository.delete(veiculo);
+
+            // Retorna 204 No Content (Sucesso, sem conteúdo)
+            return ResponseEntity.noContent().build();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Retorna 404 Not Found se o findById falhar
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }
