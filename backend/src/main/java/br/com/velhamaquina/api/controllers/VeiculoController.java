@@ -4,6 +4,7 @@ import br.com.velhamaquina.api.models.ImagemVeiculo;
 import br.com.velhamaquina.api.models.Marca;
 import br.com.velhamaquina.api.models.Veiculo;
 import br.com.velhamaquina.api.models.Proprietario;
+import br.com.velhamaquina.api.repositories.ImagemRepository;
 import br.com.velhamaquina.api.repositories.ProprietarioRepository;
 import br.com.velhamaquina.api.repositories.VeiculoRepository;
 import br.com.velhamaquina.api.repositories.MarcaRepository;
@@ -28,6 +29,7 @@ public class VeiculoController {
     private final ObjectMapper objectMapper;
     private final MarcaRepository marcaRepository;
     private final ProprietarioRepository proprietarioRepository;
+    private final ImagemRepository imagemRepository;
 
 
     @Value("${upload.diretorio.imagens}")
@@ -36,11 +38,12 @@ public class VeiculoController {
     @Value("${upload.url-base}")
     private String urlBase;
 
-    public VeiculoController(VeiculoRepository veiculoRepository, ObjectMapper objectMapper, MarcaRepository marcaRepository, ProprietarioRepository proprietarioRepository) {
+    public VeiculoController(VeiculoRepository veiculoRepository, ObjectMapper objectMapper, MarcaRepository marcaRepository, ProprietarioRepository proprietarioRepository, ImagemRepository imagemRepository) {
         this.veiculoRepository = veiculoRepository;
         this.objectMapper = objectMapper;
         this.marcaRepository = marcaRepository;
         this.proprietarioRepository = proprietarioRepository;
+        this.imagemRepository = imagemRepository;
     }
 
     @GetMapping
@@ -145,15 +148,15 @@ public class VeiculoController {
             @RequestParam("veiculoJson") String veiculoJson) {
 
         try {
-            // --- ETAPA 1: Buscar o Veículo Existente ---
-            // Buscamos o veículo que já existe no banco
+            // --- Buscar o Veículo Existente ---
+            // Buscam o veículo que já existe no banco
             Veiculo veiculoExistente = veiculoRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("Veículo não encontrado com id: " + id));
 
-            // --- ETAPA 2: Converter o JSON com os dados atualizados ---
+            // ---  Converte o JSON com os dados atualizados ---
             Veiculo veiculoAtualizado = objectMapper.readValue(veiculoJson, Veiculo.class);
 
-            // --- ETAPA 3: Lógica "Find or Create" (Reutilizada) ---
+            // Lógica "Find or Create"  ---
 
             // Proprietario (Baseado no Email)
             Proprietario propDoJson = veiculoAtualizado.getProprietario();
@@ -162,7 +165,7 @@ public class VeiculoController {
             Proprietario propParaSalvar;
 
             if (proprietarioExistenteOpt.isPresent()) {
-                // Se o proprietário EXISTE, atualizamos seus dados
+                // Se o proprietário EXISTE, atualiza seus dados
                 propParaSalvar = proprietarioExistenteOpt.get();
 
                 // Copia os dados do formulário (JSON) para o objeto do banco
@@ -180,7 +183,6 @@ public class VeiculoController {
 
             } else {
                 // Se NÃO existe, salva o novo proprietário que veio do JSON
-                // (que já tem os dados do mapa)
                 propParaSalvar = proprietarioRepository.save(propDoJson);
             }
 
@@ -189,17 +191,14 @@ public class VeiculoController {
             Marca marcaParaSalvar = marcaRepository.findByNomeMarca(marcaDoJson.getNomeMarca())
                     .orElseGet(() -> marcaRepository.save(marcaDoJson));
 
-            // --- ETAPA 4: Atualizar os Dados do Veículo ---
+            // --- Atualizar os Dados do Veículo ---
 
-            // Atualizamos o Modelo (que é um objeto complexo)
             veiculoExistente.getModelo().setNomeModelo(veiculoAtualizado.getModelo().getNomeModelo());
             veiculoExistente.getModelo().setMarca(marcaParaSalvar);
 
-            // Atualizamos o Proprietario e a Categoria
             veiculoExistente.setProprietario(propParaSalvar);
             veiculoExistente.setCategoria(veiculoAtualizado.getCategoria()); // Categoria já vem com ID
 
-            // Atualizamos os campos simples
             veiculoExistente.setAnoFabricacao(veiculoAtualizado.getAnoFabricacao());
             veiculoExistente.setAnoModelo(veiculoAtualizado.getAnoModelo());
             veiculoExistente.setPreco(veiculoAtualizado.getPreco());
@@ -208,7 +207,7 @@ public class VeiculoController {
             veiculoExistente.setDescricao(veiculoAtualizado.getDescricao());
             veiculoExistente.setPlaca(veiculoAtualizado.getPlaca());
 
-            // --- ETAPA 5: Lidar com Novas Imagens ---
+            // --- Lidar com Novas Imagens ---
             // (Nota: Este código apenas ADICIONA novas imagens, não remove as antigas)
             if (novasImagens != null && !novasImagens.isEmpty()) {
 
@@ -241,7 +240,7 @@ public class VeiculoController {
                 }
             }
 
-            // --- ETAPA 6: Salvar o Veículo Atualizado ---
+            // Salvar o Veículo Atualizado
             Veiculo veiculoSalvo = veiculoRepository.save(veiculoExistente);
             return ResponseEntity.ok(veiculoSalvo); // Retorna 200 OK
 
@@ -250,6 +249,34 @@ public class VeiculoController {
             return ResponseEntity.status(400).body(null); // 400 Bad Request
         }
     }
+
+    @DeleteMapping("/imagens/{id}")
+    public ResponseEntity<Void> excluirImagem(@PathVariable Integer id) {
+        try {
+            ImagemVeiculo imagem = imagemRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Imagem não encontrada"));
+
+
+            try {
+                String nomeArquivo = imagem.getUrlImagem().substring(urlBase.length());
+                File arquivoParaApagar = new File(caminhoUpload + nomeArquivo);
+                if (arquivoParaApagar.exists()) {
+                    arquivoParaApagar.delete();
+                }
+            } catch (Exception e) {
+                System.err.println("Falha ao apagar arquivo físico, mas o registro do banco será removido: " + e.getMessage());
+            }
+
+            imagemRepository.delete(imagem);
+
+            return ResponseEntity.noContent().build(); // Sucesso (204 No Content)
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.notFound().build(); // Erro (404 Not Found)
+        }
+    }
+
     @DeleteMapping("/excluir/{id}")
     public ResponseEntity<Void> excluirVeiculo(@PathVariable Integer id) {
         try {
@@ -294,5 +321,6 @@ public class VeiculoController {
             return ResponseEntity.notFound().build();
         }
     }
+
 
 }
