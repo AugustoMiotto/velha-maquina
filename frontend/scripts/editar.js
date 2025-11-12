@@ -167,14 +167,23 @@ async function carregarDadosDoVeiculo() {
         // --- PREENCHE AS IMAGENS JÁ EXISTENTES ---
         const gridExistentes = document.getElementById('preview-imagens');
         if (gridExistentes && v.imagens && v.imagens.length > 0) {
-            gridExistentes.innerHTML = '<h4>Imagens Atuais:</h4>';
+            
             v.imagens.forEach(img => {
                 const item = document.createElement('div');
                 item.className = 'preview-item preview-item-existente';
+                // Adiciona um ID único ao container para remoção
+                item.id = `imagem-existente-${img.id_imagem}`; 
+                
                 item.innerHTML = `
                     <img src="${img.urlImagem}" alt="Imagem existente">
-                    `;
+                    
+                    <button type="button" class="btn-remover-img" data-id="${img.id_imagem}">X</button>
+                `;
                 gridExistentes.appendChild(item);
+
+                // --- A PARTE MÁGICA ---
+                // Anexa o "ouvidor" de clique DIRETAMENTE ao botão que acabamos de criar
+                item.querySelector('.btn-remover-img').addEventListener('click', handleExcluirImagem);
             });
         }
         
@@ -184,6 +193,45 @@ async function carregarDadosDoVeiculo() {
     } catch (erro) {
         statusDiv.textContent = `Erro ao carregar dados: ${erro.message}`;
         statusDiv.style.color = 'red';
+    }
+}
+
+/**
+ * EXCLUSÃO de uma imagem existente
+ * (Chamada quando o usuário clica no 'X' de uma imagem)
+ */
+async function handleExcluirImagem(event) {
+    const botao = event.currentTarget; 
+    const idImagem = botao.dataset.id; 
+    
+    if (!idImagem) return;
+
+    
+    if (!confirm("Tem certeza que deseja excluir esta imagem?")) {
+        return;
+    }
+
+    botao.disabled = true;
+    botao.textContent = '...';
+
+    try {
+        const resposta = await fetch(`${API_BASE_URL}/veiculos/imagens/${idImagem}`, {
+            method: 'DELETE'
+        });
+
+        // 204 No Content é o sucesso
+        if (resposta.status === 204) {
+            // Sucesso! Remove a imagem da tela.
+            // Pega o 'div' pai (preview-item) e o remove.
+            botao.closest('.preview-item-existente').remove();
+        } else {
+            throw new Error(`Erro ao excluir no servidor: ${resposta.status}`);
+        }
+    } catch (erro) {
+        console.error("Erro ao excluir imagem:", erro);
+        alert("Não foi possível excluir a imagem. Tente novamente.");
+        botao.disabled = false;
+        botao.textContent = 'X';
     }
 }
 

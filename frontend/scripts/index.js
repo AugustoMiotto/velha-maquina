@@ -26,7 +26,7 @@ function initCarousel(){
     slides[idx].classList.add('active');
     dotsBox.children[idx].classList.add('active');
   };
-  const start = ()=>{ stop(); timer=setInterval(()=>go(idx+1),4500); };
+  const start = ()=>{ stop(); timer=setInterval(()=>go(idx+1),3500); };
   const stop  = ()=>{ if(timer){clearInterval(timer); timer=null;} };
   start();
   document.querySelector('.hero-carousel').addEventListener('mouseenter', stop);
