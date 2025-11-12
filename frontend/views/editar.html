@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Velha Máquina - Editar Veículo</title>
+
+  <link rel="stylesheet" href="/velha-maquina/frontend/styles/navbar.css" />
+  <link rel="stylesheet" href="../styles/anunciar.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Playfair+Display:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="12" fill="%232c211e"/><circle cx="20" cy="44" r="6" fill="%23cfa24b"/><circle cx="44" cy="44" r="6" fill="%23cfa24b"/><path d="M10 40h44l-4-14c-1-4-4-7-9-7H23c-5 0-8 3-9 7l-4 14Z" fill="%23f4e3c1" stroke="%23cfa24b" stroke-width="2"/></svg>' />
+  
+  <!-- Leaflet (mantido) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+<body>
+  <header class="header">
+    <a class="brand" href="index.html">
+      <img src="/velha-maquina/frontend/assets/logo.png" alt="Velha Máquina" onerror="this.style.display='none'">
+      <span class="logo-text">
+        <strong class="logo-title">Velha Máquina</strong>
+        <small class="logo-sub">Clássicos que contam histórias</small>
+      </span>
+    </a>
+    <nav class="navbar">
+      <a href="index.html">Início</a>
+      <a href="encontrar.html">Encontrar</a>
+      <a href="anunciar.html" class="active">Anunciar</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h2>Edite seu carro</h2>
+
+    <form id="form-anuncio" enctype="multipart/form-data" class="form-anuncio">
+      <!-- grade 1: categoria / modelo / marca -->
+      <div class="grid g-3">
+        <div class="campo">
+          <label for="categoria">Categoria</label>
+          <select id="categoria" required>
+            <option value="">Carregando...</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="modelo-nome">Modelo</label>
+          <input type="text" id="modelo-nome" placeholder="Ex: Fusca 1972" required />
+        </div>
+        <div class="campo">
+          <label for="marca-nome">Marca</label>
+          <input type="text" id="marca-nome" placeholder="Ex: Volkswagen" required />
+        </div>
+      </div>
+
+      <!-- grade 2: anos / preço / km -->
+      <div class="grid g-4">
+        <div class="campo">
+          <label for="ano-fabricacao">Ano de Fabricação</label>
+          <input type="number" id="ano-fabricacao" required />
+        </div>
+        <div class="campo">
+          <label for="ano-modelo">Ano do Modelo</label>
+          <input type="number" id="ano-modelo" required />
+        </div>
+        <div class="campo">
+          <label for="preco">Preço (R$)</label>
+          <input type="number" id="preco" required />
+        </div>
+        <div class="campo">
+          <label for="quilometragem">Quilometragem</label>
+          <input type="number" id="quilometragem" required />
+        </div>
+      </div>
+
+      <!-- grade 3: cor / placa -->
+      <div class="grid g-2">
+        <div class="campo">
+          <label for="cor">Cor</label>
+          <input type="text" id="cor" required />
+        </div>
+        <div class="campo">
+          <label for="placa">Placa</label>
+          <input type="text" id="placa" required />
+        </div>
+      </div>
+
+      <!-- descrição -->
+      <div class="campo">
+        <label for="descricao">Descrição</label>
+        <textarea id="descricao" rows="4" placeholder="Fale mais sobre o veículo"></textarea>
+      </div>
+
+      <!-- proprietário -->
+      <div class="grid g-3">
+        <div class="campo">
+          <label for="prop-nome">Nome do Proprietário</label>
+          <input type="text" id="prop-nome" required />
+        </div>
+        <div class="campo">
+          <label for="prop-email">Email</label>
+          <input type="email" id="prop-email" required />
+        </div>
+        <div class="campo">
+          <label for="prop-telefone">Telefone</label>
+          <input type="text" id="prop-telefone" required />
+        </div>
+      </div>
+
+      <!-- endereço + autocomplete (mantido) -->
+      <div class="campo">
+        <label for="endereco">Endereço</label>
+        <input type="text" id="endereco" placeholder="Rua, número, cidade..." required />
+        <ul id="sugestoes-endereco" class="sugestoes-list"></ul>
+
+        <!-- campos ocultos que o JS preenche -->
+        <input type="hidden" id="latitude" name="latitude" />
+        <input type="hidden" id="longitude" name="longitude" />
+        <input type="hidden" id="cidade" name="cidade" />
+        <input type="hidden" id="estado" name="estado" />
+      </div>
+
+      <!-- mapa (Leaflet) -->
+      <div id="mapa" class="mapa"></div>
+
+      <!-- imagens -->
+      <div class="campo">
+        <label for="imagens">Imagens do veículo</label>
+        <div id="preview-imagens" class="preview-grid">
+            </div>
+        <input type="file" id="imagens" accept="image/*" multiple />
+      </div>
+
+      <!-- BOTÃO NO FINAL (fixo na página, sem toolbar) -->
+      <div class="acoes-form">
+        <button type="submit" id="btn-enviar" class="btn-primary">Salvar Alterações</button>
+        <button type="button" id="btn-excluir" class="btn-excluir">Excluir Anúncio</button>
+        <p id="status-envio" class="status"></p>
+
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 Velha Máquina — Todos os direitos reservados</p>
+  </footer>
+
+  <script src="../scripts/editar.js"></script>
+</body>
+</html>

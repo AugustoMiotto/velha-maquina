@@ -17,32 +17,36 @@
 
   async function init() {
     const url = new URL(location.href);
-    const idFromURL  = url.searchParams.get('id') || null;
+    const idFromURL = url.searchParams.get('id') || null;
 
-    // 1) Tenta URL ?data=, depois storages, depois API
-    let raw = tryURLData(url) || tryStorage(idFromURL) || (idFromURL ? await tryAPIOnce(idFromURL) : null);
-    if (!raw) { renderError('Não foi possível carregar os detalhes do veículo.'); return; }
-
-    // 2) Normaliza o primeiro pacote de dados
-    let d = normalize(raw);
-
-    // 3) Enriquecer com API se faltou vendedor/nome
-    const idFinal = idFromURL || raw?.id_veiculo || raw?.id || d?.id;
-    if ((!d?.vendedor?.nome || d.vendedor.nome.trim() === '') && idFinal) {
-      const apiRaw = await tryAPIOnce(idFinal);
-      if (apiRaw) {
-        const dApi = normalize(apiRaw);
-        d = mergeVehiclePrefAPI(d, dApi);
-      }
+    if (!idFromURL) {
+        renderError('ID do veículo não encontrado na URL.');
+        return;
     }
 
-    if (!d) { renderError('Não foi possível interpretar os dados do veículo.'); return; }
+    // --- CORREÇÃO (LÓGICA SIMPLIFICADA) ---
+    // 1. CHAMA A API DIRETAMENTE. Ignora cache (tryStorage) e URL (tryURLData).
+    let apiRaw = await tryAPIOnce(idFromURL);
 
+    if (!apiRaw) {
+        renderError('Não foi possível carregar os detalhes do veículo. Verifique a API.');
+        return;
+    }
+
+    // 2. Normaliza os dados frescos da API
+    let d = normalize(apiRaw);
+
+    if (!d) {
+        renderError('Não foi possível interpretar os dados do veículo.');
+        return;
+    }
+
+    // 3. Renderiza (agora 'd' está 100% correto)
     renderAnuncio(d);
     initGallery();
     enableLightbox();
     initWhatsAndEmail();
-  }
+}
 
   /* ---------- fontes ---------- */
   function tryURLData(url){
@@ -232,6 +236,10 @@
       <section class="desc">
         <h3>Descrição</h3>
         <p>${nl2br(escapeHTML(d.descricao || '—'))}</p>
+      </section>
+
+      </section>
+        <a class="btn btn-editar" id="btn-editar" href="editar.html?id=${d.id}" > Editar Anúncio </a>
       </section>
     `;
   }
